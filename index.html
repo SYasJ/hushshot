@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <!--CSP-->
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="referrer" content="no-referrer" />
+  <title>RedactIt — One-click privacy shield for screenshots & documents</title>
+  <meta name="description" content="Drop a screenshot or PDF. RedactIt blurs card numbers, emails, phones, addresses, faces and barcodes, strips metadata, and never uploads a byte." />
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+  <script type="module" src="/src/main.js"></script>
+</head>
+<body>
+  <div class="bg-glow" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <a class="brand" href="#" id="brand" aria-label="RedactIt home">
+      <svg viewBox="0 0 64 64" width="30" height="30" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8b5cf6"/><stop offset="1" stop-color="#22d3ee"/></linearGradient></defs><path d="M32 4 8 13v17c0 15 10 26 24 30 14-4 24-15 24-30V13z" fill="url(#lg)"/><rect x="18" y="22" width="28" height="6" rx="3" fill="#0b0d12" opacity=".85"/><rect x="18" y="32" width="20" height="6" rx="3" fill="#0b0d12" opacity=".85"/><rect x="18" y="42" width="24" height="6" rx="3" fill="#0b0d12" opacity=".55"/></svg>
+      <span>Redact<b>It</b></span>
+    </a>
+    <div class="top-right">
+      <span class="pill" title="Everything runs in your browser. Files are never uploaded."><i class="dot"></i> 100% on-device · nothing uploaded</span>
+      <button id="btn-reset" class="btn ghost" hidden>↺ New file</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- ───────────── Landing ───────────── -->
+    <section id="landing">
+      <div class="hero">
+        <h1>Share the screenshot.<br /><span class="grad">Not your secrets.</span></h1>
+        <p class="lede">Drop an image or PDF. RedactIt finds and hides card numbers, emails, phone numbers, addresses, faces and barcodes — and wipes the hidden metadata — in seconds.</p>
+      </div>
+
+      <label id="dropzone" class="dropzone" tabindex="0">
+        <input id="file" type="file" accept="image/*,application/pdf,.pdf" hidden />
+        <div class="dz-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4m0 0L7.5 8.5M12 4l4.5 4.5"/><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>
+        </div>
+        <div class="dz-title">Drop a screenshot, photo or PDF here</div>
+        <div class="dz-sub">or <u>browse</u> · or paste with <kbd>Ctrl</kbd>/<kbd>⌘</kbd>+<kbd>V</kbd></div>
+        <div class="dz-formats">PNG · JPG · WebP · GIF · PDF</div>
+      </label>
+      <div class="try-row"><button id="btn-sample" class="btn ghost">✨ Try it with a sample pay stub</button></div>
+      <div id="landing-error" class="error" role="alert" hidden></div>
+
+      <div class="steps">
+        <div class="step"><span class="n">1</span><b>Drop</b><span>any image or PDF</span></div>
+        <div class="step-arrow">→</div>
+        <div class="step"><span class="n">2</span><b>Auto-blur</b><span>sensitive stuff is found for you</span></div>
+        <div class="step-arrow">→</div>
+        <div class="step"><span class="n">3</span><b>Save</b><span>clean, metadata-free file</span></div>
+      </div>
+
+      <div class="features">
+        <div class="feat"><h3>🔍 Finds what matters</h3><p>Cards (Luhn-checked), SSNs, emails, phones, street addresses, account numbers, birth dates, API keys, faces, barcodes &amp; QR codes.</p></div>
+        <div class="feat"><h3>🧼 Strips hidden data</h3><p>GPS coordinates, camera serials, timestamps and PDF author info are gone — and we re-open the file to prove it.</p></div>
+        <div class="feat"><h3>🔒 Truly private</h3><p>OCR and face detection run locally. A strict Content-Security-Policy blocks network calls. Works offline.</p></div>
+        <div class="feat"><h3>💥 Irreversible</h3><p>Effects average pixels before smoothing, and PDFs are flattened to images — the text under the box is really gone.</p></div>
+      </div>
+    </section>
+
+    <!-- ───────────── Workspace ───────────── -->
+    <section id="workspace" hidden>
+      <div class="stage-col">
+        <div id="stage" class="stage">
+          <div id="frame" class="frame">
+            <canvas id="preview"></canvas>
+            <div id="overlay" class="overlay"></div>
+            <div id="scanfx" class="scanfx" hidden><i></i></div>
+          </div>
+        </div>
+        <div class="stage-bar">
+          <div id="pagenav" class="pagenav" hidden>
+            <button id="pg-prev" class="btn ghost sm" aria-label="Previous page">‹</button>
+            <span id="pg-label">Page 1 / 1</span>
+            <button id="pg-next" class="btn ghost sm" aria-label="Next page">›</button>
+          </div>
+          <div class="hint" id="stage-hint">Click a box to toggle it · drag on the image to hide anything else</div>
+          <button id="btn-peek" class="btn ghost sm" title="Hold to see the original">👁 Hold to compare</button>
+        </div>
+      </div>
+
+      <aside class="panel">
+        <div class="card" id="scan-card">
+          <div class="card-head"><h2 id="scan-title">Scanning…</h2><span id="scan-count" class="count-badge"></span></div>
+          <ul id="steps" class="scan-steps"></ul>
+          <div class="bar"><i id="scan-bar"></i></div>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><h2>What gets hidden</h2></div>
+          <ul id="cats" class="cats"></ul>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><h2>Style</h2></div>
+          <div class="seg" id="styles" role="radiogroup" aria-label="Redaction style">
+            <button data-style="blur" class="on" role="radio" aria-checked="true">Blur</button>
+            <button data-style="pixelate" role="radio" aria-checked="false">Pixelate</button>
+            <button data-style="blackout" role="radio" aria-checked="false">Blackout</button>
+          </div>
+          <label class="slider"><span>Strength</span><input id="strength" type="range" min="0" max="100" value="65" /></label>
+        </div>
+
+        <div class="card" id="meta-card">
+          <div class="card-head"><h2>Hidden metadata</h2><span class="tag ok">will be stripped</span></div>
+          <ul id="meta" class="meta"></ul>
+        </div>
+
+        <div class="card export">
+          <div class="row">
+            <label class="fmt" id="fmt-wrap"><span>Format</span>
+              <select id="format"><option value="png">PNG (lossless)</option><option value="jpeg">JPG (smaller)</option></select>
+            </label>
+          </div>
+          <button id="btn-save" class="btn primary big">⬇ Save sanitized file</button>
+          <button id="btn-copy" class="btn ghost wide">📋 Copy to clipboard</button>
+          <div id="save-note" class="save-note" hidden></div>
+          <p class="fine">Auto-detection is good, not perfect. Give the preview a quick look before you share.</p>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+  <div id="dragveil" class="dragveil" hidden><div>Drop to shield it 🛡️</div></div>
+
+  <footer class="foot">
+    <span>RedactIt · MIT licensed · <a href="https://github.com/your-name/redactit" target="_blank" rel="noopener">GitHub</a></span>
+    <span>Your files never leave this tab.</span>
+  </footer>
+</body>
+</html>

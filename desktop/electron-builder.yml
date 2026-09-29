@@ -1,0 +1,8 @@
+# npx electron-builder --config desktop/electron-builder.yml
+appId: app.redactit.desktop
+productName: RedactIt
+directories: { output: release }
+files: ["dist/**", "desktop/main.cjs", "package.json"]
+mac:   { category: public.app-category.utilities, target: [dmg] }
+win:   { target: [nsis] }
+linux: { target: [AppImage], category: Utility }

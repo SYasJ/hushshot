@@ -1,0 +1,53 @@
+{
+  "name": "redactit",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "One-click privacy shield for screenshots & PDFs. Auto-blurs cards, emails, phones, addresses, faces & barcodes and strips metadata — 100% local.",
+  "license": "MIT",
+  "scripts": {
+    "postinstall": "node scripts/copy-assets.mjs",
+    "dev": "vite --host 0.0.0.0",
+    "build": "node scripts/copy-assets.mjs && vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "test": "node --test tests/",
+    "e2e": "node e2e/smoke.mjs",
+    "samples": "node scripts/make-samples.mjs",
+    "desktop": "npm run build && npx electron desktop/main.cjs",
+    "desktop:pack": "npm run build && npx electron-builder --config desktop/electron-builder.yml"
+  },
+  "devDependencies": {
+    "jsbarcode": "^3.12.3",
+    "playwright": "^1.63.0",
+    "qrcode": "^1.5.4",
+    "vite": "^6.4.3",
+    "wait-on": "^9.4.0"
+  },
+  "dependencies": {
+    "@tesseract.js-data/eng": "^1.0.0",
+    "@vladmandic/face-api": "^1.7.15",
+    "@zxing/library": "^0.21.3",
+    "exifr": "^7.1.3",
+    "pdf-lib": "^1.17.1",
+    "pdfjs-dist": "^4.10.38",
+    "tesseract.js": "^5.1.1"
+  },
+  "keywords": [
+    "privacy",
+    "redaction",
+    "screenshot",
+    "pdf",
+    "ocr",
+    "pii",
+    "exif",
+    "blur",
+    "local-first"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/your-name/redactit.git"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
