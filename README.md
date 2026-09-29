@@ -38,6 +38,20 @@ RedactIt makes the safe thing the *easy* thing:
 | --- | --- |
 | <img src="docs/landing.png" alt="RedactIt landing page with drop zone" /> | <img src="docs/screenshot-app.png" alt="RedactIt workspace showing detected items with per-category toggles" /> |
 
+## Before & after gallery
+
+Three redaction styles, seven document types — all produced by the real app. **[See the full gallery →](docs/EXAMPLES.md)**
+
+| Document | Blur · Pixelate · Blackout |
+| --- | --- |
+| 🧾 Pay stub (photo, QR, barcode) | <a href="docs/EXAMPLES.md#1--pay-stub--image-with-photo-qr-code-and-barcode"><img src="docs/examples/paystub-comparison.png" width="420" alt="Pay stub before/after"></a> |
+| 💬 Dark-mode Slack chat (keys, password) | <a href="docs/EXAMPLES.md#2--dark-mode-slack-chat--screenshot-with-secrets"><img src="docs/examples/chat-dark-mode-comparison.png" width="420" alt="Chat before/after"></a> |
+| 🪪 Driver's license | <a href="docs/EXAMPLES.md#3--drivers-license--id-card-with-photo-and-barcode"><img src="docs/examples/id-card-comparison.png" width="420" alt="ID card before/after"></a> |
+| 🏥 Medical intake form | <a href="docs/EXAMPLES.md#4--medical-intake-form--labelled-fields-wrapped-lines"><img src="docs/examples/medical-form-comparison.png" width="420" alt="Medical form before/after"></a> |
+| 💳 Checkout page | <a href="docs/EXAMPLES.md#5--checkout-page--card-billing-details-qr"><img src="docs/examples/checkout-comparison.png" width="420" alt="Checkout before/after"></a> |
+| 👨‍👩‍👧 Group photo (faces) | <a href="docs/EXAMPLES.md#6--group-photo--faces-only"><img src="docs/examples/group-photo-comparison.png" width="420" alt="Group photo before/after"></a> |
+| 📄 Lease PDF | <a href="docs/EXAMPLES.md#7--lease-pdf-page-2--pdf-with-a-real-text-layer"><img src="docs/examples/lease-pdf-page2-comparison.png" width="420" alt="Lease PDF before/after"></a> |
+
 ## Features
 
 ### 🔍 Detects
@@ -161,8 +175,8 @@ RedactIt is a safety net, not a guarantee. **Always glance at the preview before
 - **Names aren't detected.** Names are context-dependent and would cause a lot of false positives with regex-only detection. Use the drag-to-hide tool (a local NER model is on the [roadmap](#roadmap)).
 - **OCR isn't perfect.** Tiny fonts, low contrast, unusual fonts, handwriting, rotated or curved text can be missed. A digit misread by OCR can still leave a card *pattern* undetected if it's badly broken up.
 - **English-first.** Address rules are US/Canada/UK oriented; phone rules include international formats; OCR uses the English model.
-- **Faces:** heavily rotated, occluded or tiny faces can be missed; non-faces occasionally trigger. Toggle boxes to correct.
-- **Barcodes:** 1D codes are located via scan-line heuristics when the native `BarcodeDetector` API isn't available.
+- **Faces:** heavily rotated, occluded or tiny faces can be missed; non-faces occasionally trigger. Wide images are scanned in overlapping tiles so small faces are found, at the cost of speed. Toggle boxes to correct.
+- **Barcodes:** without the native `BarcodeDetector` API (Chrome on Windows/Linux, Firefox), 1D codes are located via scan-line heuristics and a structure check that rejects text mistaken for bars. Damaged or very small codes can be missed.
 - **Not detected by design:** license plates, signatures, logos, company names, free-form medical text.
 - **HEIC** photos aren't decodable by browsers – convert to JPG/PNG first.
 - **PDFs** are limited to 60 pages and become image-only.
@@ -179,7 +193,7 @@ redactit/
 │   ├── style.css
 │   ├── detect/
 │   │   ├── patterns.js       # 🧠 the rule engine (pure JS, unit-tested)
-│   │   ├── textRegions.js    # OCR words ↔ character ranges ↔ pixel rects (pure, unit-tested)
+│   │   ├── textRegions.js    # OCR words ↔ character ranges ↔ pixel rects, wrapped-line + neighbour merging (pure, unit-tested)
 │   │   ├── ocr.js            # Tesseract.js worker wrapper (+ pre-processing)
 │   │   ├── faces.js          # TensorFlow.js face detection with tiling + NMS
 │   │   └── barcodes.js       # BarcodeDetector / ZXing multi-scale fallback
@@ -192,7 +206,8 @@ redactit/
 │   ├── copy-assets.mjs       # vendors OCR/face/PDF assets into public/vendor (postinstall)
 │   ├── make-samples.mjs      # generates the fictional sample docs
 │   └── make-before-after.mjs # README hero image
-├── public/samples/           # fictional pay stub, GPS-tagged JPG, 2-page lease PDF
+├── public/samples/           # fictional pay stub, chat, ID, medical form, checkout, group photo, GPS JPG, lease PDF
+├── docs/EXAMPLES.md          # before/after gallery (docs/examples/*)
 ├── tests/                    # node --test unit tests
 ├── e2e/smoke.mjs             # Playwright end-to-end test incl. OCR-of-output check
 ├── desktop/                  # optional Electron wrapper
@@ -202,7 +217,7 @@ redactit/
 ## Testing
 
 ```bash
-npm test                                   # 12 unit tests, <1 s
+npm test                                   # unit tests (rules, box mapping, metadata) — under a second
 npm run build && npm run preview &         # then:
 npm run e2e -- http://localhost:4173/      # full pipeline in headless Chromium
 ```

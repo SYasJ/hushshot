@@ -41,19 +41,22 @@ function contains(a, b) { // b mostly inside a
   return Math.max(0, x1 - x0) * Math.max(0, y1 - y0) > 0.7 * b.w * b.h;
 }
 
-export async function detectFaces(canvas, onProgress) {
+export async function detectFaces(canvas, onProgress, { minConfidence = 0.55 } = {}) {
   const faceapi = await getLib();
-  const opts = new faceapi.SsdMobilenetv1Options({ minConfidence: 0.55, maxResults: 40 });
+  const opts = new faceapi.SsdMobilenetv1Options({ minConfidence, maxResults: 40 });
   const found = [];
   const W = canvas.width, H = canvas.height;
 
   const run = async (sx, sy, sw, sh) => {
-    let input = canvas;
-    if (sx || sy || sw !== W || sh !== H) {
-      input = document.createElement('canvas');
-      input.width = sw; input.height = sh;
-      input.getContext('2d').drawImage(canvas, sx, sy, sw, sh, 0, 0, sw, sh);
-    }
+    // SSD-MobileNet squashes its input into a square, which distorts faces in wide/tall images and tanks the score.
+    // So every window is letterboxed onto a square canvas (top-left aligned, so coordinates map 1:1).
+    const side = Math.max(sw, sh);
+    const input = document.createElement('canvas');
+    input.width = side; input.height = side;
+    const ictx = input.getContext('2d');
+    ictx.fillStyle = '#808080';
+    ictx.fillRect(0, 0, side, side);
+    ictx.drawImage(canvas, sx, sy, sw, sh, 0, 0, sw, sh);
     const dets = await faceapi.detectAllFaces(input, opts);
     for (const d of dets) {
       const b = d.box;
@@ -64,8 +67,9 @@ export async function detectFaces(canvas, onProgress) {
 
   const windows = [[0, 0, W, H]];
   const longest = Math.max(W, H);
-  if (longest > 1800) {
-    const n = longest > 2600 ? 3 : 2;
+  if (longest > 640) {
+    // Small faces score much higher when a tile is scanned at higher effective resolution.
+    const n = longest > 2200 ? 3 : 2;
     const tw = Math.round(W / (n - 0.4)), th = Math.round(H / (n - 0.4));
     for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) {
       windows.push([Math.round((i * (W - tw)) / (n - 1)), Math.round((j * (H - th)) / (n - 1)), tw, th]);

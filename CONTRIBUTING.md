@@ -11,6 +11,7 @@ npm run dev        # http://localhost:5173
 npm test           # fast unit tests (detection rules, rect mapping, metadata summary)
 npm run build && npx vite preview --port 4173 &
 npm run e2e        # headless-Chromium end-to-end test against the production build
+npm run examples   # regenerate the before/after gallery in docs/examples/
 ```
 
 ## Where things live

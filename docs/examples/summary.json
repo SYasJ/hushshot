@@ -1,0 +1,52 @@
+{
+  "paystub": {
+    "card": 1,
+    "ssn": 1,
+    "email": 1,
+    "phone": 2,
+    "address": 2,
+    "account": 2,
+    "dob": 1,
+    "face": 1,
+    "barcode": 2
+  },
+  "chat-dark-mode": {
+    "email": 1,
+    "phone": 1,
+    "address": 1,
+    "secret": 3
+  },
+  "id-card": {
+    "address": 2,
+    "account": 1,
+    "dob": 1,
+    "face": 1,
+    "barcode": 1
+  },
+  "medical-form": {
+    "ssn": 1,
+    "email": 1,
+    "phone": 3,
+    "address": 2,
+    "account": 2,
+    "dob": 1
+  },
+  "checkout": {
+    "card": 1,
+    "email": 1,
+    "phone": 1,
+    "address": 1,
+    "barcode": 1
+  },
+  "group-photo": {
+    "face": 4
+  },
+  "lease-pdf-page2": {
+    "card": 1,
+    "ssn": 1,
+    "email": 1,
+    "phone": 2,
+    "address": 2,
+    "dob": 1
+  }
+}

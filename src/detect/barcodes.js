@@ -50,12 +50,30 @@ function refineLinear(gray, W, H, p0, p1) {
   for (let k = mid; k >= 0; k--) { if (energy(k) > base * 0.35) { lo = k; miss = 0; } else if (++miss > 3) break; }
   miss = 0;
   for (let k = mid; k < limit; k++) { if (energy(k) > base * 0.35) { hi = k; miss = 0; } else if (++miss > 3) break; }
+  // A real 1D code looks (almost) the same on every row across its height; lines of text do not.
+  // Compare the binarised scan line with rows at 25% / 75% of the found height.
+  const sample = (k) => {
+    const v = [];
+    for (let t = Math.floor(a); t < Math.ceil(b); t++) v.push(gray[horizontal ? k * W + t : t * W + k]);
+    return v;
+  };
+  const midRow = sample(clampi(mid, 0, limit - 1));
+  const thr = (Math.min(...midRow) + Math.max(...midRow)) / 2;
+  let coherence = 0;
+  if (hi - lo >= 8) {
+    const rows = [0.25, 0.75].map((f) => sample(Math.round(lo + (hi - lo) * f)));
+    const agree = rows.map((r) => r.reduce((n, v, i) => n + ((v < thr) === (midRow[i] < thr) ? 1 : 0), 0) / r.length);
+    coherence = Math.min(...agree);
+  }
   const quiet = (b - a) * 0.04 + 4;
-  // Extra room below/right so the human-readable digits printed under most 1D codes are covered as well.
-  const cap = (hi - lo + 1) * 0.32;
+  // Human-readable digits are often printed under the bars: extend the box only if there is real ink there.
+  const maxCap = Math.ceil((hi - lo + 1) * 0.6);
+  let capEnd = hi;
+  for (let k = hi + 1; k <= Math.min(limit - 1, hi + maxCap); k++) if (energy(k) > base * 0.12) capEnd = k;
+  const cap = capEnd > hi ? capEnd - hi + 3 : 0;
   return horizontal
-    ? { x: a - quiet, y: lo, w: b - a + quiet * 2, h: hi - lo + 1 + cap }
-    : { x: lo, y: a - quiet, w: hi - lo + 1 + cap, h: b - a + quiet * 2 };
+    ? { x: a - quiet, y: lo, w: b - a + quiet * 2, h: hi - lo + 1 + cap, coherence }
+    : { x: lo, y: a - quiet, w: hi - lo + 1 + cap, h: b - a + quiet * 2, coherence };
 }
 const clampi = (v, a, b) => Math.max(a, Math.min(b, v));
 
@@ -75,7 +93,7 @@ function zxingPass(canvas) {
     let result;
     try {
       const src = new RGBLuminanceSource(gray, width, height);
-      result = reader.decode(new BinaryBitmap(new HybridBinarizer(src)));
+      result = reader.decodeWithState(new BinaryBitmap(new HybridBinarizer(src)));
     } catch { break; }
     const pts = result.getResultPoints().map((p) => ({ x: p.getX(), y: p.getY() }));
     if (!pts.length) break;
@@ -91,12 +109,16 @@ function zxingPass(canvas) {
       box = { x: x - pad, y: y - pad, w: w + pad * 2, h: h + pad * 2 };
     } else if (pts.length >= 2) {
       box = refineLinear(gray, width, height, pts[0], pts[pts.length - 1]);
+      if (box.coherence < 0.85) {
+        console.debug('[redactit] ignored a 1D decode that does not look like a barcode', BarcodeFormat[result.getBarcodeFormat()], box.coherence.toFixed(2));
+        box.reject = true;
+      }
     } else {
       box = { x: pts[0].x - 40, y: pts[0].y - 40, w: 80, h: 80 };
     }
     box.x = clampi(box.x, 0, width); box.y = clampi(box.y, 0, height);
     box.w = Math.min(box.w, width - box.x); box.h = Math.min(box.h, height - box.y);
-    found.push({ ...box, confidence: 0.9 });
+    if (!box.reject) found.push({ x: box.x, y: box.y, w: box.w, h: box.h, confidence: 0.9 });
     // blank the area so the next pass can find another code
     const fill = 200;
     for (let y = Math.floor(box.y); y < Math.min(height, Math.ceil(box.y + box.h)); y++) {

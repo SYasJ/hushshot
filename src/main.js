@@ -462,3 +462,10 @@ $('btn-copy').addEventListener('click', async () => {
     toast('Your browser blocked clipboard access – use Save instead.', 4500);
   }
 });
+
+// Debug hook for tests/development only: open the app with ?debug to inspect internal state from the console.
+if (new URLSearchParams(location.search).has('debug')) window.__redactit = {
+  state,
+  detectFaces: async (...a) => (await import('./detect/faces.js')).detectFaces(...a),
+  detectBarcodes: async (...a) => (await import('./detect/barcodes.js')).detectBarcodes(...a),
+};

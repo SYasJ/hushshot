@@ -72,7 +72,9 @@ export async function recognizeLines(canvas, onProgress) {
     for (const para of block.paragraphs || []) {
       for (const line of para.lines || []) {
         const words = (line.words || [])
-          .filter((w) => w.text && w.text.trim())
+          // Drop low-confidence garbage (e.g. "words" OCR hallucinates inside photos) – it would otherwise stretch
+          // redaction boxes. Anything containing a digit or "@" is kept, because that is what secrets look like.
+          .filter((w) => w.text && w.text.trim() && (w.confidence >= 45 || /[\d@]/.test(w.text)))
           .map((w) => ({
             text: w.text.trim(),
             confidence: w.confidence,

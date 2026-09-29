@@ -35,7 +35,7 @@ function shapePath(ctx, rect, type) {
   if (type === 'face') {
     ctx.ellipse(rect.x + rect.w / 2, rect.y + rect.h / 2, rect.w / 2, rect.h / 2, 0, 0, Math.PI * 2);
   } else {
-    const rad = Math.min(rect.h / 3, 10);
+    const rad = Math.min(rect.h / 4, 6);
     const { x, y, w, h } = rect;
     ctx.moveTo(x + rad, y);
     ctx.arcTo(x + w, y, x + w, y + h, rad);

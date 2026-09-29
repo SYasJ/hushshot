@@ -97,7 +97,7 @@ const RULES = [
   {
     // 123 Main Street, Apt 4B
     type: 'address',
-    re: new RegExp(String.raw`\b\d{1,6}[A-Za-z]?\s+(?:(?:N|S|E|W|NE|NW|SE|SW|North|South|East|West|NORTH|SOUTH|EAST|WEST)\.?\s+)?(?:[A-Z0-9][A-Za-z0-9.'\-]*\s+){0,3}?(?:${STREET_SUFFIX})\b\.?(?:,?\s*(?:Apt|Apartment|Suite|Ste|Unit|Fl|Floor|APT|SUITE|STE|UNIT|#)\.?\s*[\w\-]+)?`, 'g'),
+    re: new RegExp(String.raw`\b\d{1,6}[A-Za-z]?\s+(?:(?:N|S|E|W|NE|NW|SE|SW|North|South|East|West|NORTH|SOUTH|EAST|WEST)\.?\s+)?(?:[A-Z0-9][A-Za-z0-9.'\-]*\s+){0,3}?(?:${STREET_SUFFIX})\b\.?(?:\s+(?:NW|NE|SW|SE|N|S|E|W)\b\.?)?(?:,?\s*(?:Apt|Apartment|Suite|Ste|Unit|Fl|Floor|APT|SUITE|STE|UNIT|#)\.?\s*[\w\-]+)?`, 'g'),
     validate: (m) => (/^\d/.test(m) ? 0.85 : 0),
   },
   {
@@ -144,6 +144,12 @@ const RULES = [
     type: 'secret',
     re: /\b(?:sk-[A-Za-z0-9_\-]{20,}|sk_(?:live|test)_[A-Za-z0-9]{16,}|pk_(?:live|test)_[A-Za-z0-9]{16,}|AKIA[0-9A-Z]{16}|gh[pousr]_[A-Za-z0-9]{30,}|github_pat_[A-Za-z0-9_]{30,}|xox[baprs]-[A-Za-z0-9\-]{10,}|AIza[0-9A-Za-z_\-]{30,}|eyJ[A-Za-z0-9_\-]{8,}\.[A-Za-z0-9_\-]{8,}\.[A-Za-z0-9_\-]{8,})\b/g,
     confidence: 0.97,
+  },
+  {
+    // Stripe-style keys after OCR turned the underscores into spaces: "sk live 4eC39Hq…"
+    type: 'secret',
+    re: /\b(?:sk|pk|rk)[_\- ](?:live|test)[_\- ][A-Za-z0-9]{16,}/g,
+    confidence: 0.9,
   },
   {
     type: 'secret',

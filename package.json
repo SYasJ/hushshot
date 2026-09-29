@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "One-click privacy shield for screenshots & PDFs. Auto-blurs cards, emails, phones, addresses, faces & barcodes and strips metadata — 100% local.",
+  "description": "One-click privacy shield for screenshots & PDFs. Auto-blurs cards, emails, phones, addresses, faces & barcodes and strips metadata \u2014 100% local.",
   "license": "MIT",
   "scripts": {
     "postinstall": "node scripts/copy-assets.mjs",
@@ -14,7 +14,9 @@
     "e2e": "node e2e/smoke.mjs",
     "samples": "node scripts/make-samples.mjs",
     "desktop": "npm run build && npx electron desktop/main.cjs",
-    "desktop:pack": "npm run build && npx electron-builder --config desktop/electron-builder.yml"
+    "desktop:pack": "npm run build && npx electron-builder --config desktop/electron-builder.yml",
+    "examples": "node scripts/make-examples.mjs",
+    "examples:inputs": "node scripts/make-example-inputs.mjs"
   },
   "devDependencies": {
     "jsbarcode": "^3.12.3",
