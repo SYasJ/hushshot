@@ -22,17 +22,17 @@
     "jsbarcode": "^3.12.3",
     "playwright": "^1.63.0",
     "qrcode": "^1.5.4",
-    "vite": "^6.4.3",
+    "vite": "^8.3.1",
     "wait-on": "^9.4.0"
   },
   "dependencies": {
     "@tesseract.js-data/eng": "^1.0.0",
     "@vladmandic/face-api": "^1.7.15",
-    "@zxing/library": "^0.21.3",
+    "@zxing/library": "^0.23.0",
     "exifr": "^7.1.3",
     "pdf-lib": "^1.17.1",
-    "pdfjs-dist": "^4.10.38",
-    "tesseract.js": "^5.1.1"
+    "pdfjs-dist": "^6.3.289",
+    "tesseract.js": "^7.0.0"
   },
   "keywords": [
     "privacy",
