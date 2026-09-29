@@ -7,3 +7,7 @@ e2e/out/
 .DS_Store
 .vite/
 .scratch/
+.env.local
+.env.*.local
+preview.log
+e2e.log

@@ -19,9 +19,9 @@ function serve() {
   return new Promise((resolve) => {
     const server = http.createServer((req, res) => {
       const rel = decodeURIComponent(new URL(req.url, 'http://x').pathname);
-      let file = path.normalize(path.join(DIST, rel === '/' ? 'index.html' : rel));
-      if (!file.startsWith(DIST) || !fs.existsSync(file) || fs.statSync(file).isDirectory()) { res.writeHead(404).end(); return; }
-      res.writeHead(200, { 'Content-Type': MIME[path.extname(file)] || 'application/octet-stream' });
+      let file = path.normalize(path.join(DIST, rel === '/' ? 'index.html' : rel)); // must stay inside dist/ (not a sibling like dist-x/)
+      if (!file.startsWith(DIST + path.sep) || !fs.existsSync(file) || fs.statSync(file).isDirectory()) { res.writeHead(404).end(); return; }
+      res.writeHead(200, { 'Content-Type': MIME[path.extname(file)] || 'application/octet-stream', 'X-Content-Type-Options': 'nosniff' });
       fs.createReadStream(file).pipe(res);
     });
     server.listen(0, '127.0.0.1', () => resolve(server.address().port));

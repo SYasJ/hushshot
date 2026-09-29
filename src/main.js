@@ -176,8 +176,9 @@ async function scanDocument(runId) {
   const fails = new Set();
   const stale = () => runId !== state.run;
 
+  const load = (p) => p.catch((err) => { console.error('[redactit] could not load detector', err); return null; });
   const [ocrMod, barMod, faceMod] = await Promise.all([
-    import('./detect/ocr.js'), import('./detect/barcodes.js'), import('./detect/faces.js'),
+    load(import('./detect/ocr.js')), load(import('./detect/barcodes.js')), load(import('./detect/faces.js')),
   ]);
 
   const stepOrder = ['ocr', 'barcode', 'face'];
@@ -193,6 +194,7 @@ async function scanDocument(runId) {
       progress(si, 0);
       try {
         let found = [];
+        if (!{ ocr: ocrMod, barcode: barMod, face: faceMod }[id]) throw new Error('detector not loaded');
         if (id === 'ocr') {
           const lines = await ocrMod.recognizeLines(page.canvas, (f) => !stale() && progress(si, f));
           page.lines = lines;
@@ -291,11 +293,15 @@ $('dropzone').addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.ke
 $('btn-reset').addEventListener('click', reset);
 $('brand').addEventListener('click', (e) => { e.preventDefault(); if (state.doc) reset(); });
 
-$('btn-sample').addEventListener('click', async () => {
+// built-in example documents (all fictional)
+$('samples').addEventListener('click', async (e) => {
+  const name = e.target.closest('[data-sample]')?.dataset.sample;
+  if (!name) return;
   try {
-    const res = await fetch(`${BASE}samples/sample-paystub.png`);
+    const res = await fetch(`${BASE}samples/${name}`);
+    if (!res.ok) throw new Error(res.statusText);
     const blob = await res.blob();
-    openFile(new File([blob], 'sample-paystub.png', { type: 'image/png' }));
+    openFile(new File([blob], name, { type: blob.type }));
   } catch { showError('Could not load the sample.'); }
 });
 

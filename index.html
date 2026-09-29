@@ -5,9 +5,63 @@
   <!--CSP-->
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="referrer" content="no-referrer" />
-  <title>RedactIt — One-click privacy shield for screenshots & documents</title>
-  <meta name="description" content="Drop a screenshot or PDF. RedactIt blurs card numbers, emails, phones, addresses, faces and barcodes, strips metadata, and never uploads a byte." />
+  <title>RedactIt — Free Offline Screenshot &amp; PDF Redaction Tool (Blur PII, Strip EXIF)</title>
+  <meta name="description" content="Free, private redaction tool: drop a screenshot or PDF and RedactIt auto-blurs credit cards, SSNs, emails, phones, addresses, API keys, faces and QR codes, then strips EXIF/GPS metadata. Runs 100% in your browser — nothing is uploaded." />
+  <meta name="keywords" content="redact screenshot, redact PDF online, blur sensitive information, remove EXIF data, strip GPS metadata, blur faces, PII redaction, anonymize image, offline redaction tool, privacy" />
+  <meta name="author" content="RedactIt contributors" />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+  <meta name="theme-color" content="#0a0c11" />
+  <meta name="color-scheme" content="dark" />
+  <link rel="canonical" href="%VITE_SITE_URL%" />
   <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+  <link rel="manifest" href="./manifest.webmanifest" />
+
+  <!-- Open Graph / Twitter -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="RedactIt" />
+  <meta property="og:title" content="RedactIt — Share the screenshot, not your secrets" />
+  <meta property="og:description" content="Auto-blur cards, emails, phones, addresses, faces &amp; QR codes and strip hidden metadata from screenshots and PDFs. 100% on-device, free and open source." />
+  <meta property="og:url" content="%VITE_SITE_URL%" />
+  <meta property="og:image" content="%VITE_SITE_URL%og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="A pay stub before and after RedactIt: SSN, address, card, phone, face and QR code blurred" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="RedactIt — Share the screenshot, not your secrets" />
+  <meta name="twitter:description" content="Free, offline redaction for screenshots &amp; PDFs. Auto-blurs PII and strips EXIF/GPS. Nothing is uploaded." />
+  <meta name="twitter:image" content="%VITE_SITE_URL%og-image.png" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebApplication",
+        "name": "RedactIt",
+        "url": "%VITE_SITE_URL%",
+        "description": "Browser-based tool that automatically detects and blurs personal information (credit cards, SSNs, emails, phone numbers, addresses, API keys, faces, barcodes) in screenshots and PDFs, and strips EXIF/GPS metadata. Everything runs locally.",
+        "applicationCategory": "SecurityApplication",
+        "operatingSystem": "Any (modern web browser)",
+        "browserRequirements": "Requires JavaScript and WebAssembly",
+        "isAccessibleForFree": true,
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+        "license": "https://opensource.org/licenses/MIT",
+        "image": "%VITE_SITE_URL%og-image.png",
+        "featureList": ["Automatic PII detection with on-device OCR", "Face, barcode and QR code detection", "Blur, pixelate or blackout redaction", "EXIF, GPS and PDF metadata removal", "Works offline, no uploads"]
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          { "@type": "Question", "name": "Are my files uploaded anywhere?", "acceptedAnswer": { "@type": "Answer", "text": "No. RedactIt has no server. OCR, face detection and barcode scanning run inside your browser tab, and a strict Content-Security-Policy blocks the page from sending your file anywhere." } },
+          { "@type": "Question", "name": "Can the blur be reversed?", "acceptedAnswer": { "@type": "Answer", "text": "Pixels are averaged into large blocks with random noise before any smoothing, so the original detail is discarded rather than hidden. For maximum certainty choose Blackout, which replaces the area with a solid fill." } },
+          { "@type": "Question", "name": "Does it remove EXIF and GPS data?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Exports are re-encoded from raw pixels, so EXIF, GPS, camera serial numbers, XMP, IPTC and PDF author info are never copied. The output is re-opened and checked for metadata before you share it." } },
+          { "@type": "Question", "name": "How do I redact a PDF?", "acceptedAnswer": { "@type": "Answer", "text": "Drop the PDF on the page. Each page is rendered, sensitive text is detected and hidden, and the pages are flattened into a new PDF so the text under the redaction no longer exists." } }
+        ]
+      }
+    ]
+  }
+  </script>
   <script type="module" src="/src/main.js"></script>
 </head>
 <body>
@@ -24,6 +78,7 @@
     </div>
   </header>
 
+  <noscript><p class="error">RedactIt runs entirely in your browser and needs JavaScript enabled.</p></noscript>
   <main>
     <!-- ───────────── Landing ───────────── -->
     <section id="landing">
@@ -41,7 +96,19 @@
         <div class="dz-sub">or <u>browse</u> · or paste with <kbd>Ctrl</kbd>/<kbd>⌘</kbd>+<kbd>V</kbd></div>
         <div class="dz-formats">PNG · JPG · WebP · GIF · PDF</div>
       </label>
-      <div class="try-row"><button id="btn-sample" class="btn ghost">✨ Try it with a sample pay stub</button></div>
+      <div class="try-row">
+        <span class="try-label">✨ No file handy? Try an example (all fictional):</span>
+        <div id="samples" class="samples">
+          <button class="chip" data-sample="sample-paystub.png">🧾 Pay stub</button>
+          <button class="chip" data-sample="sample-chat-dark.png">💬 Chat with API keys</button>
+          <button class="chip" data-sample="sample-id-card.png">🪪 Driver's license</button>
+          <button class="chip" data-sample="sample-medical-form.png">🏥 Medical form</button>
+          <button class="chip" data-sample="sample-checkout.png">💳 Checkout page</button>
+          <button class="chip" data-sample="sample-group-photo.jpg">👨‍👩‍👧 Group photo</button>
+          <button class="chip" data-sample="sample-with-gps.jpg">📍 Photo with GPS</button>
+          <button class="chip" data-sample="sample-lease.pdf">📄 Lease PDF</button>
+        </div>
+      </div>
       <div id="landing-error" class="error" role="alert" hidden></div>
 
       <div class="steps">
@@ -56,8 +123,18 @@
         <div class="feat"><h3>🔍 Finds what matters</h3><p>Cards (Luhn-checked), SSNs, emails, phones, street addresses, account numbers, birth dates, API keys, faces, barcodes &amp; QR codes.</p></div>
         <div class="feat"><h3>🧼 Strips hidden data</h3><p>GPS coordinates, camera serials, timestamps and PDF author info are gone — and we re-open the file to prove it.</p></div>
         <div class="feat"><h3>🔒 Truly private</h3><p>OCR and face detection run locally. A strict Content-Security-Policy blocks network calls. Works offline.</p></div>
-        <div class="feat"><h3>💥 Irreversible</h3><p>Effects average pixels before smoothing, and PDFs are flattened to images — the text under the box is really gone.</p></div>
+        <div class="feat"><h3>💥 Irreversible</h3><p>Effects average pixels into coarse, noise-jittered blocks before smoothing, and PDFs are flattened — the text under the box is really gone.</p></div>
       </div>
+
+      <section class="faq" aria-labelledby="faq-title">
+        <h2 id="faq-title">Frequently asked questions</h2>
+        <details><summary>Are my files uploaded anywhere?</summary><p>No. RedactIt has no server. OCR, face detection and barcode scanning run inside your browser tab, and a strict Content-Security-Policy blocks the page from sending your file anywhere. Open your browser's Network tab and check — dropping a file causes zero requests.</p></details>
+        <details><summary>Can the blur be reversed?</summary><p>Pixels are averaged into large blocks with random noise <em>before</em> any smoothing, so the detail is discarded, not hidden. For maximum certainty pick <b>Blackout</b>, which replaces the area with a solid fill.</p></details>
+        <details><summary>Does it remove EXIF, GPS and other metadata?</summary><p>Yes. The export is re-encoded from raw pixels, so EXIF, GPS coordinates, camera serial numbers, XMP, IPTC and PDF author info are never copied — and the saved file is re-opened and checked.</p></details>
+        <details><summary>How do I redact a PDF?</summary><p>Drop it here. Every page is rendered, sensitive text is detected and hidden, and the pages are flattened into a new PDF, so the text beneath a redaction no longer exists. (Up to 60 pages; the output isn't text-selectable.)</p></details>
+        <details><summary>What does it detect?</summary><p>Credit cards (Luhn-checked), SSNs and tax IDs, emails, phone numbers, street addresses and postcodes, account/routing/IBAN/policy numbers, labelled dates of birth, API keys and passwords, faces, barcodes and QR codes. Names aren't auto-detected — drag a box over anything it missed.</p></details>
+        <details><summary>Does it work offline?</summary><p>Yes. All models, WebAssembly and fonts are bundled with the app, so once the page has loaded you can disconnect and keep redacting.</p></details>
+      </section>
     </section>
 
     <!-- ───────────── Workspace ───────────── -->
@@ -127,7 +204,7 @@
   <div id="dragveil" class="dragveil" hidden><div>Drop to shield it 🛡️</div></div>
 
   <footer class="foot">
-    <span>RedactIt · MIT licensed · <a href="https://github.com/your-name/redactit" target="_blank" rel="noopener">GitHub</a></span>
+    <span>RedactIt · MIT licensed · <a href="https://github.com/SYasJ/redactit" target="_blank" rel="noopener noreferrer">Source on GitHub</a></span>
     <span>Your files never leave this tab.</span>
   </footer>
 </body>

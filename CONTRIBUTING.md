@@ -5,7 +5,7 @@ Thanks for helping make sharing screenshots safer! 🛡️
 ## Setup
 
 ```bash
-git clone https://github.com/your-name/redactit && cd redactit
+git clone https://github.com/SYasJ/redactit && cd redactit
 npm install        # also vendors OCR/face/PDF assets into public/vendor (postinstall)
 npm run dev        # http://localhost:5173
 npm test           # fast unit tests (detection rules, rect mapping, metadata summary)

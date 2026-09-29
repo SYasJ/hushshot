@@ -7,9 +7,12 @@
 ### One-click privacy shield for screenshots & documents
 
 **Drop an image or PDF → sensitive info is auto-blurred → click Save.**
+
+### [▶ Try it live — syasj.github.io/redactit](https://syasj.github.io/redactit/)
+
 Cards, emails, phones, addresses, faces, barcodes — gone. Hidden metadata — gone. Nothing ever leaves your device.
 
-[![CI](https://github.com/your-name/redactit/actions/workflows/ci.yml/badge.svg)](https://github.com/your-name/redactit/actions/workflows/ci.yml)
+[![CI](https://github.com/SYasJ/redactit/actions/workflows/ci.yml/badge.svg)](https://github.com/SYasJ/redactit/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-8b5cf6.svg)](LICENSE)
 ![Runs offline](https://img.shields.io/badge/network-none-34d399)
 ![No uploads](https://img.shields.io/badge/uploads-0-22d3ee)
@@ -102,12 +105,14 @@ After export it **re-opens the file it just wrote** and checks that no metadata 
 
 ### Use it online
 
-Deploy to GitHub Pages in one click: fork the repo → **Settings → Pages → Source: GitHub Actions**. The included workflow (`.github/workflows/pages.yml`) builds and publishes on every push to `main`.
+**👉 [syasj.github.io/redactit](https://syasj.github.io/redactit/)** — no install, no sign-up. Click any of the eight built-in examples to see it work.
+
+Host your own copy: fork the repo → **Settings → Pages → Source: GitHub Actions**, and set `VITE_SITE_URL` in `.env` to your Pages URL (used for the canonical / Open Graph tags). The included workflow (`.github/workflows/pages.yml`) builds and publishes on every push to `main`.
 
 ### Run it locally
 
 ```bash
-git clone https://github.com/your-name/redactit
+git clone https://github.com/SYasJ/redactit
 cd redactit
 npm install          # also copies the OCR / face / PDF assets into public/vendor
 npm run dev          # → http://localhost:5173
@@ -160,7 +165,7 @@ flowchart LR
 
 Bad redaction is worse than none, so:
 
-- **Blur and pixelate average pixels into blocks first** (roughly 2–4 cells across a line of text, ~5–11 across a face), and only *then* smooth. The original detail is discarded, not merely obscured — there is nothing to "un-blur".
+- **Blur and pixelate average pixels into blocks first** (only ~1–2.4 cells across a line of text, ~5–11 across a face), add random per-block noise, and only *then* smooth. The original detail is discarded, not merely obscured — there is nothing to "un-blur". Text cells are deliberately coarser than a glyph because fine mosaics of a known font can be brute-forced back into text ([Depix](https://github.com/spipm/Depix)-style attacks); the jitter stops exact colour matching.
 - **Nothing is layered.** The output image is a new set of pixels. There is no hidden original underneath a box, unlike PDF "highlight" annotations that can be deleted.
 - **PDFs are flattened.** Each page is rasterised, redacted and re-embedded as an image, so the text layer beneath a redaction no longer exists. (The trade-off: exported PDFs aren't text-selectable.)
 - **Nothing is copied byte-for-byte from your source file**, so EXIF, XMP, IPTC, thumbnails and PDF info dictionaries can't tag along. PDFs are written with metadata auto-stamping disabled (no `Producer`, no dates).
@@ -217,7 +222,7 @@ redactit/
 ## Testing
 
 ```bash
-npm test                                   # unit tests (rules, box mapping, metadata) — under a second
+npm test                                   # unit tests (rules, box mapping, metadata, redaction cell size) — under a second
 npm run build && npm run preview &         # then:
 npm run e2e -- http://localhost:4173/      # full pipeline in headless Chromium
 ```
@@ -241,7 +246,7 @@ All sample data is fictional (`4242 4242 4242 4242` is a public test card number
 - [ ] License-plate & signature detectors
 - [ ] "Keep text selectable" PDF mode using true content-stream redaction
 - [ ] Browser extension: right-click any image → RedactIt
-- [ ] Installable PWA
+- [ ] Installable PWA (a web manifest ships already; offline service worker still to do)
 - [ ] Custom rules (bring your own regex / keywords, e.g. an employee-ID format)
 
 ## FAQ
@@ -256,6 +261,10 @@ All sample data is fictional (`4242 4242 4242 4242` is a public test card number
 
 **Why is the first scan slow?** The OCR engine and face model load on first use, then get reused for the rest of the session.
 
+## Security
+
+Found a way to recover redacted content or leak data? Please see [SECURITY.md](SECURITY.md) — use a private report, and only ever share fictional documents.
+
 ## Credits
 
 Built on the shoulders of: [Tesseract.js](https://github.com/naptha/tesseract.js) (OCR), [@vladmandic/face-api](https://github.com/vladmandic/face-api) + TensorFlow.js (faces), [ZXing](https://github.com/zxing-js/library) (barcodes), [PDF.js](https://github.com/mozilla/pdf.js) + [pdf-lib](https://github.com/Hopding/pdf-lib) (PDF), [exifr](https://github.com/MikeKovarik/exifr) (metadata inspection), [Vite](https://vitejs.dev/), [Playwright](https://playwright.dev/).
@@ -264,4 +273,3 @@ Built on the shoulders of: [Tesseract.js](https://github.com/naptha/tesseract.js
 
 [MIT](LICENSE) © RedactIt contributors. See [CONTRIBUTING.md](CONTRIBUTING.md) to get involved.
 
-<div align="center"><sub>Replace <code>your-name</code> in the badges, links and <code>package.json</code> with your GitHub username after you push.</sub></div>

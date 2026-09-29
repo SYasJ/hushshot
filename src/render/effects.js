@@ -26,7 +26,9 @@ export function coverRect(r, W, H) {
 /** Size (px) of one mosaic cell. strength 0..1 (higher = coarser). */
 export function cellSize(rect, type, strength) {
   const shorter = Math.min(rect.w, rect.h);
-  const cells = type === 'face' || type === 'barcode' ? 11 - 6 * strength : 4.2 - 2.6 * strength; // cells across the short side
+  // Text gets very coarse cells (≈1–2.4 across a line's height): fine mosaics of known fonts can be brute-forced back
+  // into text (see "Depix"/"Unredacter"), so a text cell must span most of a glyph.
+  const cells = type === 'face' || type === 'barcode' ? 11 - 6 * strength : 2.4 - 1.4 * strength; // cells across the short side
   return Math.max(3, Math.round(shorter / cells));
 }
 
@@ -47,7 +49,7 @@ function shapePath(ctx, rect, type) {
 }
 
 /** Average colour of each `cell`×`cell` block → tiny canvas (1px per block). */
-function averageBlocks(source, rect, cell) {
+function averageBlocks(source, rect, cell, noise = 0) {
   const sctx = source.getContext('2d', { willReadFrequently: true });
   const { data } = sctx.getImageData(rect.x, rect.y, rect.w, rect.h);
   const bw = Math.ceil(rect.w / cell);
@@ -66,7 +68,9 @@ function averageBlocks(source, rect, cell) {
         for (let x = bx * cell; x < x1; x++, i += 4) { r += data[i]; g += data[i + 1]; b += data[i + 2]; n++; }
       }
       const o = (by * bw + bx) * 4;
-      img.data[o] = r / n; img.data[o + 1] = g / n; img.data[o + 2] = b / n; img.data[o + 3] = 255;
+      // Random jitter per block defeats attacks that re-pixelate candidate text and look for an exact colour match.
+      const j = noise ? (Math.random() * 2 - 1) * noise : 0;
+      img.data[o] = r / n + j; img.data[o + 1] = g / n + j; img.data[o + 2] = b / n + j; img.data[o + 3] = 255;
     }
   }
   out.putImageData(img, 0, 0);
@@ -95,7 +99,7 @@ function applyOne(ctx, source, region, style, strength) {
     };
     area.w = clamp(rect.x + rect.w + grow, 0, W) - area.x;
     area.h = clamp(rect.y + rect.h + grow, 0, H) - area.y;
-    const { small, bw, bh } = averageBlocks(source, area, cell);
+    const { small, bw, bh } = averageBlocks(source, area, cell, region.type === 'face' ? 0 : 10);
     if (style === 'pixelate') {
       ctx.imageSmoothingEnabled = false;
       ctx.drawImage(small, 0, 0, bw, bh, area.x, area.y, bw * cell, bh * cell);

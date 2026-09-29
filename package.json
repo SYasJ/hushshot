@@ -3,14 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "One-click privacy shield for screenshots & PDFs. Auto-blurs cards, emails, phones, addresses, faces & barcodes and strips metadata \u2014 100% local.",
+  "description": "Free, offline screenshot & PDF redaction tool. Auto-blurs credit cards, SSNs, emails, phones, addresses, API keys, faces & QR codes and strips EXIF/GPS metadata — 100% in your browser.",
   "license": "MIT",
   "scripts": {
     "postinstall": "node scripts/copy-assets.mjs",
     "dev": "vite --host 0.0.0.0",
     "build": "node scripts/copy-assets.mjs && vite build",
     "preview": "vite preview --host 0.0.0.0",
-    "test": "node --test tests/",
+    "test": "node --test tests/*.test.js",
     "e2e": "node e2e/smoke.mjs",
     "samples": "node scripts/make-samples.mjs",
     "desktop": "npm run build && npx electron desktop/main.cjs",
@@ -37,19 +37,29 @@
   "keywords": [
     "privacy",
     "redaction",
+    "redact",
     "screenshot",
     "pdf",
     "ocr",
     "pii",
     "exif",
+    "gps",
+    "metadata",
     "blur",
-    "local-first"
+    "face-blur",
+    "anonymize",
+    "local-first",
+    "offline"
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/your-name/redactit.git"
+    "url": "git+https://github.com/SYasJ/redactit.git"
   },
   "engines": {
     "node": ">=18"
+  },
+  "homepage": "https://syasj.github.io/redactit/",
+  "bugs": {
+    "url": "https://github.com/SYasJ/redactit/issues"
   }
 }
