@@ -1,6 +1,6 @@
 # Security Policy
 
-RedactIt exists to stop sensitive data from leaking, so a flaw that lets redacted content be recovered is treated as a security bug.
+HushShot exists to stop sensitive data from leaking, so a flaw that lets redacted content be recovered is treated as a security bug.
 
 ## In scope
 
@@ -14,7 +14,7 @@ Missed *detections* (e.g. an address format that isn't recognised) are ordinary 
 ## Reporting
 
 Please **don't open a public issue** for the items above. Use GitHub's private reporting instead:
-**[Report a vulnerability](https://github.com/SYasJ/redactit/security/advisories/new)**.
+**[Report a vulnerability](https://github.com/SYasJ/hushshot/security/advisories/new)**.
 
 Include steps to reproduce with a **fictional** document — never attach real personal data. Expect an acknowledgement within a few days.
 

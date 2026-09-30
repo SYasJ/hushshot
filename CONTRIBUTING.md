@@ -1,11 +1,11 @@
-# Contributing to RedactIt
+# Contributing to HushShot
 
 Thanks for helping make sharing screenshots safer! 🛡️
 
 ## Setup
 
 ```bash
-git clone https://github.com/SYasJ/redactit && cd redactit
+git clone https://github.com/SYasJ/hushshot && cd hushshot
 npm install        # also vendors OCR/face/PDF assets into public/vendor (postinstall)
 npm run dev        # http://localhost:5173
 npm test           # fast unit tests (detection rules, rect mapping, metadata summary)
@@ -38,4 +38,4 @@ npm run examples   # regenerate the before/after gallery in docs/examples/
 
 ## Reporting a privacy bug
 
-If RedactIt ever leaves sensitive data readable or metadata intact in an exported file, please open an issue with a **fictional** reproduction (never post real documents).
+If HushShot ever leaves sensitive data readable or metadata intact in an exported file, please open an issue with a **fictional** reproduction (never post real documents).

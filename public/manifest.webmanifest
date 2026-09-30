@@ -1,6 +1,6 @@
 {
-  "name": "RedactIt — Screenshot & PDF Redaction",
-  "short_name": "RedactIt",
+  "name": "HushShot — Screenshot & PDF Redaction",
+  "short_name": "HushShot",
   "description": "Auto-blur sensitive info in screenshots and PDFs and strip hidden metadata. 100% on-device.",
   "start_url": "./",
   "scope": "./",

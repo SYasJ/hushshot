@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://syasj.github.io/redactit/sitemap.xml
+Sitemap: https://syasj.github.io/hushshot/sitemap.xml

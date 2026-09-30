@@ -33,7 +33,7 @@ app.whenReady().then(async () => {
   const origin = `http://127.0.0.1:${port}`;
   session.defaultSession.webRequest.onBeforeRequest((d, cb) => cb({ cancel: !(d.url.startsWith(origin) || /^(blob|data|devtools):/.test(d.url)) }));
   const win = new BrowserWindow({
-    width: 1360, height: 900, backgroundColor: '#0a0c11', title: 'RedactIt',
+    width: 1360, height: 900, backgroundColor: '#0a0c11', title: 'HushShot',
     webPreferences: { contextIsolation: true, sandbox: true, nodeIntegration: false },
   });
   win.setMenuBarVisibility(false);

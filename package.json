@@ -1,5 +1,5 @@
 {
-  "name": "redactit",
+  "name": "hushshot",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -53,13 +53,13 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/SYasJ/redactit.git"
+    "url": "git+https://github.com/SYasJ/hushshot.git"
   },
   "engines": {
     "node": ">=18"
   },
-  "homepage": "https://syasj.github.io/redactit/",
+  "homepage": "https://syasj.github.io/hushshot/",
   "bugs": {
-    "url": "https://github.com/SYasJ/redactit/issues"
+    "url": "https://github.com/SYasJ/hushshot/issues"
   }
 }

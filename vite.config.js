@@ -16,7 +16,7 @@ const csp = [
 ].join('; ');
 
 const cspPlugin = () => ({
-  name: 'redactit-csp',
+  name: 'hushshot-csp',
   apply: 'build',
   transformIndexHtml: (html) =>
     html.replace('<!--CSP-->', `<meta http-equiv="Content-Security-Policy" content="${csp}" />`),

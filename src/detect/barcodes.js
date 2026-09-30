@@ -110,7 +110,7 @@ function zxingPass(canvas) {
     } else if (pts.length >= 2) {
       box = refineLinear(gray, width, height, pts[0], pts[pts.length - 1]);
       if (box.coherence < 0.85) {
-        console.debug('[redactit] ignored a 1D decode that does not look like a barcode', BarcodeFormat[result.getBarcodeFormat()], box.coherence.toFixed(2));
+        console.debug('[hushshot] ignored a 1D decode that does not look like a barcode', BarcodeFormat[result.getBarcodeFormat()], box.coherence.toFixed(2));
         box.reject = true;
       }
     } else {

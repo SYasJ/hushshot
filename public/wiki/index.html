@@ -5,17 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; object-src 'none'; base-uri 'none'; form-action 'none'" />
   <meta name="referrer" content="no-referrer" />
-  <title>RedactIt Wiki — Documentation, User Guide &amp; Security Model</title>
-  <meta name="description" content="Complete documentation for RedactIt, the free offline screenshot and PDF redaction tool: user guide, detection reference, metadata stripping, security model, architecture, configuration, deployment and contributing." />
+  <title>HushShot Wiki — Documentation, User Guide &amp; Security Model</title>
+  <meta name="description" content="Complete documentation for HushShot, the free offline screenshot and PDF redaction tool: user guide, detection reference, metadata stripping, security model, architecture, configuration, deployment and contributing." />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#0a0c11" />
-  <link rel="canonical" href="https://syasj.github.io/redactit/wiki/" />
+  <link rel="canonical" href="https://syasj.github.io/hushshot/wiki/" />
   <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
   <meta property="og:type" content="article" />
-  <meta property="og:title" content="RedactIt Wiki — Documentation" />
-  <meta property="og:description" content="User guide, detection reference, security model and developer docs for RedactIt." />
-  <meta property="og:url" content="https://syasj.github.io/redactit/wiki/" />
-  <meta property="og:image" content="https://syasj.github.io/redactit/og-image.png" />
+  <meta property="og:title" content="HushShot Wiki — Documentation" />
+  <meta property="og:description" content="User guide, detection reference, security model and developer docs for HushShot." />
+  <meta property="og:url" content="https://syasj.github.io/hushshot/wiki/" />
+  <meta property="og:image" content="https://syasj.github.io/hushshot/og-image.png" />
   <meta name="twitter:card" content="summary_large_image" />
   <style>
     :root {
@@ -169,15 +169,15 @@
 <body>
 
 <header class="top">
-  <a class="brand" href="./" aria-label="RedactIt Wiki home">
+  <a class="brand" href="./" aria-label="HushShot Wiki home">
     <svg viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8b5cf6"/><stop offset="1" stop-color="#22d3ee"/></linearGradient></defs><path d="M32 4 8 13v17c0 15 10 26 24 30 14-4 24-15 24-30V13z" fill="url(#lg)"/><rect x="18" y="22" width="28" height="6" rx="3" fill="#0b0d12" opacity=".85"/><rect x="18" y="32" width="20" height="6" rx="3" fill="#0b0d12" opacity=".85"/><rect x="18" y="42" width="24" height="6" rx="3" fill="#0b0d12" opacity=".55"/></svg>
-    <span>Redact<b>It</b></span><small>Wiki</small>
+    <span>Hush<b>Shot</b></span><small>Wiki</small>
   </a>
   <nav aria-label="Primary">
     <a href="#user-guide">Guide</a>
     <a href="#security">Security</a>
     <a href="#developers">Developers</a>
-    <a href="https://github.com/SYasJ/redactit" rel="noopener noreferrer">GitHub</a>
+    <a href="https://github.com/SYasJ/hushshot" rel="noopener noreferrer">GitHub</a>
     <a class="cta" href="../">Open the app →</a>
   </nav>
 </header>
@@ -224,8 +224,8 @@
 
     <div class="hero">
       <span class="eyebrow">Documentation</span>
-      <h1>RedactIt <span>Wiki</span></h1>
-      <p>Everything about RedactIt, the free screenshot and PDF redaction tool that runs entirely in your browser: how to use it, what it detects, why the redaction can't be undone, and how to build, extend and deploy it.</p>
+      <h1>HushShot <span>Wiki</span></h1>
+      <p>Everything about HushShot, the free screenshot and PDF redaction tool that runs entirely in your browser: how to use it, what it detects, why the redaction can't be undone, and how to build, extend and deploy it.</p>
       <div class="badges">
         <span class="badge"><i></i>100% on-device</span>
         <span class="badge">MIT licensed</span>
@@ -239,7 +239,7 @@
       <h2 class="h"><span class="num">01</span>Overview</h2>
       <p class="sub">A privacy shield for the screenshots and documents you share every day.</p>
       <p>People paste screenshots into chat apps, AI assistants, bug trackers and social media constantly. Those images often contain a card number, a home address, a face, an API key or a QR code that logs someone in, and the file itself can carry hidden GPS coordinates and camera serial numbers. Drawing black boxes by hand is slow, easy to get wrong, and leaves the metadata untouched.</p>
-      <p>RedactIt finds that information for you, hides it, and writes a clean copy of the file with no hidden metadata. It has no backend: the text recognition, face detection and barcode scanning all run in your browser tab.</p>
+      <p>HushShot finds that information for you, hides it, and writes a clean copy of the file with no hidden metadata. It has no backend: the text recognition, face detection and barcode scanning all run in your browser tab.</p>
       <div class="cards">
         <div class="card"><h4>🔍 Finds what matters</h4><p>Cards, SSNs, emails, phones, addresses, account numbers, birth dates, API keys, faces, barcodes and QR codes.</p></div>
         <div class="card"><h4>🧼 Strips hidden data</h4><p>GPS, camera and serial numbers, capture dates, author info. The saved file is re-checked.</p></div>
@@ -262,12 +262,12 @@
       <p class="sub">Use the hosted app, run it locally, or wrap it as a desktop app.</p>
 
       <h3 id="qs-online">Use it online</h3>
-      <p>Open <a href="../"><b>syasj.github.io/redactit</b></a>. There's nothing to install and no sign-up. Drop a file, or click one of the eight built-in example documents to see it work. Once the page has loaded, it keeps working with no internet connection.</p>
+      <p>Open <a href="../"><b>syasj.github.io/hushshot</b></a>. There's nothing to install and no sign-up. Drop a file, or click one of the eight built-in example documents to see it work. Once the page has loaded, it keeps working with no internet connection.</p>
 
       <h3 id="qs-local">Run it locally</h3>
       <p>Requires <b>Node.js 18+</b> and a modern browser (Chrome/Edge 119+, Firefox 121+, Safari 17.4+).</p>
-<pre><code><span class="p">$ </span>git clone https://github.com/SYasJ/redactit
-<span class="p">$ </span>cd redactit
+<pre><code><span class="p">$ </span>git clone https://github.com/SYasJ/hushshot
+<span class="p">$ </span>cd hushshot
 <span class="p">$ </span>npm install        <span class="c"># also copies OCR / face / PDF assets into public/vendor</span>
 <span class="p">$ </span>npm run dev        <span class="c"># → http://localhost:5173</span></code></pre>
       <p>Production build: plain static files you can host anywhere (GitHub Pages, Netlify, S3, a USB stick):</p>
@@ -291,7 +291,7 @@
         <li><b>Review</b>Click a box to un-hide or re-hide it, switch whole categories off, or drag to hide anything that was missed.</li>
         <li><b>Save</b>Download the sanitized file, or copy it to the clipboard. The output is re-opened and checked for metadata.</li>
       </ol>
-      <figure><img src="img/screenshot-app.jpg" alt="RedactIt workspace: the redacted pay stub on the left, the scan results, category switches, style controls and Save button on the right" width="1360" height="900" loading="lazy" /><figcaption>The workspace: preview with detection boxes (left), scan progress, categories, style and export (right).</figcaption></figure>
+      <figure><img src="img/screenshot-app.jpg" alt="HushShot workspace: the redacted pay stub on the left, the scan results, category switches, style controls and Save button on the right" width="1360" height="900" loading="lazy" /><figcaption>The workspace: preview with detection boxes (left), scan progress, categories, style and export (right).</figcaption></figure>
 
       <h3 id="ug-open">Opening files</h3>
       <div class="table-wrap"><table>
@@ -303,7 +303,7 @@
           <tr><td>HEIC / HEIF</td><td>No</td><td>Browsers can't decode HEIC. On iPhone: <i>Settings → Camera → Formats → Most Compatible</i>, or convert to JPG first.</td></tr>
         </tbody>
       </table></div>
-      <p>RedactIt handles one document at a time. If several files are dropped, the first one is opened.</p>
+      <p>HushShot handles one document at a time. If several files are dropped, the first one is opened.</p>
 
       <h3 id="ug-review">Reviewing detections</h3>
       <ul class="list">
@@ -399,7 +399,7 @@
       <p>Faces are covered with an ellipse and extra margin. Minimum confidence is 0.55.</p>
 
       <h3 id="det-barcodes">Barcodes &amp; QR codes</h3>
-      <p>RedactIt uses the browser's native <code>BarcodeDetector</code> when present (Chrome on macOS, Android and ChromeOS). Elsewhere it falls back to ZXing in pure JavaScript, trying several scales (100%, 50%, 70%, 35%, 150%) because soft screenshot codes often decode only at a different size.</p>
+      <p>HushShot uses the browser's native <code>BarcodeDetector</code> when present (Chrome on macOS, Android and ChromeOS). Elsewhere it falls back to ZXing in pure JavaScript, trying several scales (100%, 50%, 70%, 35%, 150%) because soft screenshot codes often decode only at a different size.</p>
       <p>Supported: QR, Data Matrix, Aztec, PDF417, Code 128, Code 39, EAN-13/8, UPC-A/E, ITF, Codabar. For 1D codes, ZXing only reports a scan line, so the full bar height is estimated from the image. A structure check rejects text that was mistaken for bars.</p>
     </section>
 
@@ -468,13 +468,13 @@
           <tr><td>Desktop wrapper reaching the network</td><td>Loopback-only server; every other request cancelled; path check keeps requests inside <code>dist/</code></td><td><span class="pill low">covered</span></td></tr>
         </tbody>
       </table></div>
-      <p>Found a way to recover redacted content or leak data? Please report it privately. See <a href="https://github.com/SYasJ/redactit/blob/main/SECURITY.md" rel="noopener noreferrer">SECURITY.md</a>, and only ever share fictional documents.</p>
+      <p>Found a way to recover redacted content or leak data? Please report it privately. See <a href="https://github.com/SYasJ/hushshot/blob/main/SECURITY.md" rel="noopener noreferrer">SECURITY.md</a>, and only ever share fictional documents.</p>
     </section>
 
     <!-- 8 -->
     <section id="limits">
       <h2 class="h"><span class="num">08</span>Limitations</h2>
-      <p class="sub">RedactIt is a safety net, not a guarantee.</p>
+      <p class="sub">HushShot is a safety net, not a guarantee.</p>
       <ul class="list">
         <li><b>Names aren't detected.</b> They depend on context and would cause many false positives with pattern matching alone. Use the drag-to-hide tool.</li>
         <li><b>OCR isn't perfect.</b> Tiny fonts, low contrast, handwriting, and rotated or curved text can be missed.</li>
@@ -592,7 +592,7 @@
       <p>CI (<code>.github/workflows/ci.yml</code>) runs unit tests, the build and the end-to-end test on every push and pull request.</p>
 
       <h3 id="dev-debug">Debugging</h3>
-      <p>Open the app with <code>?debug</code> (e.g. <code>http://localhost:5173/?debug</code>) to expose <code>window.__redactit</code> in the console. It contains the live <code>state</code> (pages, OCR lines, regions) plus <code>detectFaces()</code> and <code>detectBarcodes()</code> for trying detectors on any canvas. Detector failures are logged with a <code>[redactit]</code> prefix.</p>
+      <p>Open the app with <code>?debug</code> (e.g. <code>http://localhost:5173/?debug</code>) to expose <code>window.__hushshot</code> in the console. It contains the live <code>state</code> (pages, OCR lines, regions) plus <code>detectFaces()</code> and <code>detectBarcodes()</code> for trying detectors on any canvas. Detector failures are logged with a <code>[hushshot]</code> prefix.</p>
     </section>
 
     <!-- 11 -->
@@ -658,7 +658,7 @@
       <h2 class="h"><span class="num">14</span>FAQ</h2>
       <details class="faq"><summary>Does anything get uploaded?</summary><p>No. There's no backend. Open your browser's Network tab: after the page loads, dropping a file causes zero requests.</p></details>
       <details class="faq"><summary>Is it free? Do I need an account?</summary><p>Free and open source under the MIT license. No account, no sign-up, no limits.</p></details>
-      <details class="faq"><summary>Why not just blur it in Preview or Paint?</summary><p>You'd have to spot every item yourself and get each box right, and the file's EXIF/GPS data would still be there. Many blur tools are also too fine to be safe for text. RedactIt does the spotting, the safe redaction and the scrubbing.</p></details>
+      <details class="faq"><summary>Why not just blur it in Preview or Paint?</summary><p>You'd have to spot every item yourself and get each box right, and the file's EXIF/GPS data would still be there. Many blur tools are also too fine to be safe for text. HushShot does the spotting, the safe redaction and the scrubbing.</p></details>
       <details class="faq"><summary>Does PNG export change my image?</summary><p>PNG is lossless outside the redacted areas. JPG is re-encoded at quality 93. Colour profiles are dropped as part of metadata removal.</p></details>
       <details class="faq"><summary>Can I add my own patterns?</summary><p>Yes. It's one object in <code>patterns.js</code>; see <a href="#dev-rule">Adding a detection rule</a>. A UI for custom rules is on the roadmap.</p></details>
       <details class="faq"><summary>Can I use it on sensitive work documents?</summary><p>Yes, that's what it's for, and nothing leaves your device. Still review the preview, and use Blackout for the highest assurance.</p></details>
@@ -674,7 +674,7 @@
         <div class="card"><h4>🌍 More locales</h4><p>EU addresses and national IDs, IBAN validation, non-Latin OCR.</p></div>
         <div class="card"><h4>🚗 More detectors</h4><p>License plates and signatures.</p></div>
         <div class="card"><h4>📄 Selectable PDFs</h4><p>True content-stream redaction that keeps text searchable.</p></div>
-        <div class="card"><h4>🧩 Browser extension</h4><p>Right-click any image → RedactIt.</p></div>
+        <div class="card"><h4>🧩 Browser extension</h4><p>Right-click any image → HushShot.</p></div>
         <div class="card"><h4>📲 Installable PWA</h4><p>Web manifest ships already; offline service worker next.</p></div>
         <div class="card"><h4>✍️ Custom rules</h4><p>Bring your own regex or keywords from the UI.</p></div>
       </div>
@@ -691,15 +691,15 @@
         <li>Run <code>npm test</code> and the end-to-end test before opening a pull request.</li>
       </ul>
       <div class="cards">
-        <a class="card" href="https://github.com/SYasJ/redactit" rel="noopener noreferrer"><h4>⭐ Source code</h4><p>github.com/SYasJ/redactit</p></a>
-        <a class="card" href="https://github.com/SYasJ/redactit/issues" rel="noopener noreferrer"><h4>🐞 Issues</h4><p>Bugs and feature requests</p></a>
-        <a class="card" href="https://github.com/SYasJ/redactit/blob/main/CONTRIBUTING.md" rel="noopener noreferrer"><h4>🤝 Contributing guide</h4><p>Setup and conventions</p></a>
-        <a class="card" href="https://github.com/SYasJ/redactit/security/advisories/new" rel="noopener noreferrer"><h4>🔐 Report a vulnerability</h4><p>Private disclosure</p></a>
+        <a class="card" href="https://github.com/SYasJ/hushshot" rel="noopener noreferrer"><h4>⭐ Source code</h4><p>github.com/SYasJ/hushshot</p></a>
+        <a class="card" href="https://github.com/SYasJ/hushshot/issues" rel="noopener noreferrer"><h4>🐞 Issues</h4><p>Bugs and feature requests</p></a>
+        <a class="card" href="https://github.com/SYasJ/hushshot/blob/main/CONTRIBUTING.md" rel="noopener noreferrer"><h4>🤝 Contributing guide</h4><p>Setup and conventions</p></a>
+        <a class="card" href="https://github.com/SYasJ/hushshot/security/advisories/new" rel="noopener noreferrer"><h4>🔐 Report a vulnerability</h4><p>Private disclosure</p></a>
       </div>
       <h3>Credits</h3>
       <p>Built on <a href="https://github.com/naptha/tesseract.js" rel="noopener noreferrer">Tesseract.js</a>, <a href="https://github.com/vladmandic/face-api" rel="noopener noreferrer">@vladmandic/face-api</a> + TensorFlow.js, <a href="https://github.com/zxing-js/library" rel="noopener noreferrer">ZXing</a>, <a href="https://github.com/mozilla/pdf.js" rel="noopener noreferrer">PDF.js</a>, <a href="https://github.com/Hopding/pdf-lib" rel="noopener noreferrer">pdf-lib</a>, <a href="https://github.com/MikeKovarik/exifr" rel="noopener noreferrer">exifr</a> and <a href="https://vitejs.dev/" rel="noopener noreferrer">Vite</a>.</p>
       <h3>License</h3>
-      <p>MIT © RedactIt contributors.</p>
+      <p>MIT © HushShot contributors.</p>
     </section>
 
   </article>
@@ -707,7 +707,7 @@
 </div>
 
 <footer>
-  <span>RedactIt Wiki · MIT licensed · <a href="https://github.com/SYasJ/redactit" rel="noopener noreferrer">GitHub</a></span>
+  <span>HushShot Wiki · MIT licensed · <a href="https://github.com/SYasJ/hushshot" rel="noopener noreferrer">GitHub</a></span>
   <span><a href="../">Open the app</a> · <a href="#overview">Back to top ↑</a></span>
 </footer>
 

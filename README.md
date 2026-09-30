@@ -1,18 +1,18 @@
 <div align="center">
 
-<img src="public/favicon.svg" width="84" alt="RedactIt logo" />
+<img src="public/favicon.svg" width="84" alt="HushShot logo" />
 
-# RedactIt
+# HushShot
 
 ### One-click privacy shield for screenshots & documents
 
 **Drop an image or PDF → sensitive info is auto-blurred → click Save.**
 
-### [▶ Try it live — syasj.github.io/redactit](https://syasj.github.io/redactit/) · [📖 Read the wiki](https://syasj.github.io/redactit/wiki/)
+### [▶ Try it live — syasj.github.io/hushshot](https://syasj.github.io/hushshot/) · [📖 Read the wiki](https://syasj.github.io/hushshot/wiki/)
 
 Cards, emails, phones, addresses, faces, barcodes — gone. Hidden metadata — gone. Nothing ever leaves your device.
 
-[![CI](https://github.com/SYasJ/redactit/actions/workflows/ci.yml/badge.svg)](https://github.com/SYasJ/redactit/actions/workflows/ci.yml)
+[![CI](https://github.com/SYasJ/hushshot/actions/workflows/ci.yml/badge.svg)](https://github.com/SYasJ/hushshot/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-8b5cf6.svg)](LICENSE)
 ![Runs offline](https://img.shields.io/badge/network-none-34d399)
 ![No uploads](https://img.shields.io/badge/uploads-0-22d3ee)
@@ -27,7 +27,7 @@ Cards, emails, phones, addresses, faces, barcodes — gone. Hidden metadata — 
 
 We paste screenshots into **ChatGPT, Claude, Slack, Discord, GitHub issues and social media** all day. Every one of them can quietly contain a home address, a card number, a face that isn't yours, or a QR code that logs someone in. And the "fix" — drawing black boxes by hand in Paint or Photoshop — is tedious, easy to get wrong, and usually leaves the **EXIF/GPS/camera-serial metadata** untouched.
 
-RedactIt makes the safe thing the *easy* thing:
+HushShot makes the safe thing the *easy* thing:
 
 1. **Drop** any image or PDF (or paste a screenshot with <kbd>Ctrl</kbd>/<kbd>⌘</kbd>+<kbd>V</kbd>).
 2. **Auto-blur** — sensitive items are found and hidden for you. Click any box to un-hide it, drag to hide something we missed.
@@ -39,7 +39,7 @@ RedactIt makes the safe thing the *easy* thing:
 
 | Landing | Workspace |
 | --- | --- |
-| <img src="docs/landing.png" alt="RedactIt landing page with drop zone" /> | <img src="docs/screenshot-app.png" alt="RedactIt workspace showing detected items with per-category toggles" /> |
+| <img src="docs/landing.png" alt="HushShot landing page with drop zone" /> | <img src="docs/screenshot-app.png" alt="HushShot workspace showing detected items with per-category toggles" /> |
 
 ## Before & after gallery
 
@@ -74,7 +74,7 @@ Three redaction styles, seven document types — all produced by the real app. *
 
 ### 🧼 Strips hidden data
 
-Before you save, RedactIt shows exactly what's hiding in your file — and what's about to disappear:
+Before you save, HushShot shows exactly what's hiding in your file — and what's about to disappear:
 
 - 📍 GPS coordinates & altitude
 - 📷 Camera / phone model, 🔢 body & lens **serial numbers**
@@ -105,15 +105,15 @@ After export it **re-opens the file it just wrote** and checks that no metadata 
 
 ### Use it online
 
-**👉 [syasj.github.io/redactit](https://syasj.github.io/redactit/)** — no install, no sign-up. Click any of the eight built-in examples to see it work.
+**👉 [syasj.github.io/hushshot](https://syasj.github.io/hushshot/)** — no install, no sign-up. Click any of the eight built-in examples to see it work.
 
 Host your own copy: fork the repo → **Settings → Pages → Source: GitHub Actions**, and set `VITE_SITE_URL` in `.env` to your Pages URL (used for the canonical / Open Graph tags). The included workflow (`.github/workflows/pages.yml`) builds and publishes on every push to `main`.
 
 ### Run it locally
 
 ```bash
-git clone https://github.com/SYasJ/redactit
-cd redactit
+git clone https://github.com/SYasJ/hushshot
+cd hushshot
 npm install          # also copies the OCR / face / PDF assets into public/vendor
 npm run dev          # → http://localhost:5173
 ```
@@ -175,7 +175,7 @@ Bad redaction is worse than none, so:
 
 ## Limitations — please read
 
-RedactIt is a safety net, not a guarantee. **Always glance at the preview before sharing.**
+HushShot is a safety net, not a guarantee. **Always glance at the preview before sharing.**
 
 - **Names aren't detected.** Names are context-dependent and would cause a lot of false positives with regex-only detection. Use the drag-to-hide tool (a local NER model is on the [roadmap](#roadmap)).
 - **OCR isn't perfect.** Tiny fonts, low contrast, unusual fonts, handwriting, rotated or curved text can be missed. A digit misread by OCR can still leave a card *pattern* undetected if it's badly broken up.
@@ -191,7 +191,7 @@ RedactIt is a safety net, not a guarantee. **Always glance at the preview before
 ## Project structure
 
 ```
-redactit/
+hushshot/
 ├── index.html                # app shell
 ├── src/
 │   ├── main.js               # UI controller (state, scanning pipeline, export)
@@ -245,7 +245,7 @@ All sample data is fictional (`4242 4242 4242 4242` is a public test card number
 - [ ] More locales (EU addresses & national IDs, IBAN validation, non-Latin OCR packs)
 - [ ] License-plate & signature detectors
 - [ ] "Keep text selectable" PDF mode using true content-stream redaction
-- [ ] Browser extension: right-click any image → RedactIt
+- [ ] Browser extension: right-click any image → HushShot
 - [ ] Installable PWA (a web manifest ships already; offline service worker still to do)
 - [ ] Custom rules (bring your own regex / keywords, e.g. an employee-ID format)
 
@@ -253,7 +253,7 @@ All sample data is fictional (`4242 4242 4242 4242` is a public test card number
 
 **Does anything get uploaded?** No. There is no backend. Open your browser's Network tab and see for yourself — after the page loads, dropping a file causes zero requests.
 
-**Why not just blur it in Preview / Paint?** You can, but you have to spot every item yourself, get the boxes right, and remember that the file's EXIF/GPS data is still there. RedactIt does the spotting and the scrubbing.
+**Why not just blur it in Preview / Paint?** You can, but you have to spot every item yourself, get the boxes right, and remember that the file's EXIF/GPS data is still there. HushShot does the spotting and the scrubbing.
 
 **Is PNG/JPG export lossless / does it change my image?** PNG is lossless. JPG is re-encoded at quality 93. Colour profiles are dropped (part of metadata stripping), which may shift colours very slightly on wide-gamut photos.
 
@@ -271,5 +271,5 @@ Built on the shoulders of: [Tesseract.js](https://github.com/naptha/tesseract.js
 
 ## License
 
-[MIT](LICENSE) © RedactIt contributors. See [CONTRIBUTING.md](CONTRIBUTING.md) to get involved.
+[MIT](LICENSE) © HushShot contributors. See [CONTRIBUTING.md](CONTRIBUTING.md) to get involved.
 

@@ -176,7 +176,7 @@ async function scanDocument(runId) {
   const fails = new Set();
   const stale = () => runId !== state.run;
 
-  const load = (p) => p.catch((err) => { console.error('[redactit] could not load detector', err); return null; });
+  const load = (p) => p.catch((err) => { console.error('[hushshot] could not load detector', err); return null; });
   const [ocrMod, barMod, faceMod] = await Promise.all([
     load(import('./detect/ocr.js')), load(import('./detect/barcodes.js')), load(import('./detect/faces.js')),
   ]);
@@ -210,7 +210,7 @@ async function scanDocument(runId) {
         setStep(id, 'done', `${totals[id]} found`);
         if (pi === state.page) refreshAll(); else drawCategories();
       } catch (err) {
-        console.error(`[redactit] ${id} failed`, err);
+        console.error(`[hushshot] ${id} failed`, err);
         fails.add(id);
         setStep(id, 'fail', 'unavailable');
         toast(`Couldn’t run ${STEPS.find((s) => s[0] === id)[1].toLowerCase()} detection – you can still draw boxes by hand.`, 5000);
@@ -314,7 +314,7 @@ window.addEventListener('drop', (e) => {
   e.preventDefault(); dragDepth = 0; $('dragveil').hidden = true;
   const files = [...(e.dataTransfer?.files || [])];
   if (!files.length) return;
-  if (files.length > 1) toast('Opened the first file – RedactIt handles one document at a time.');
+  if (files.length > 1) toast('Opened the first file – HushShot handles one document at a time.');
   openFile(files[0]);
 });
 // paste a screenshot straight from the clipboard
@@ -470,7 +470,7 @@ $('btn-copy').addEventListener('click', async () => {
 });
 
 // Debug hook for tests/development only: open the app with ?debug to inspect internal state from the console.
-if (new URLSearchParams(location.search).has('debug')) window.__redactit = {
+if (new URLSearchParams(location.search).has('debug')) window.__hushshot = {
   state,
   detectFaces: async (...a) => (await import('./detect/faces.js')).detectFaces(...a),
   detectBarcodes: async (...a) => (await import('./detect/barcodes.js')).detectBarcodes(...a),

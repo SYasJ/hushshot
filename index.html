@@ -5,10 +5,10 @@
   <!--CSP-->
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="referrer" content="no-referrer" />
-  <title>RedactIt — Free Offline Screenshot &amp; PDF Redaction Tool (Blur PII, Strip EXIF)</title>
-  <meta name="description" content="Free, private redaction tool: drop a screenshot or PDF and RedactIt auto-blurs credit cards, SSNs, emails, phones, addresses, API keys, faces and QR codes, then strips EXIF/GPS metadata. Runs 100% in your browser — nothing is uploaded." />
+  <title>HushShot — Free Offline Screenshot &amp; PDF Redaction Tool (Blur PII, Strip EXIF)</title>
+  <meta name="description" content="Free, private redaction tool: drop a screenshot or PDF and HushShot auto-blurs credit cards, SSNs, emails, phones, addresses, API keys, faces and QR codes, then strips EXIF/GPS metadata. Runs 100% in your browser — nothing is uploaded." />
   <meta name="keywords" content="redact screenshot, redact PDF online, blur sensitive information, remove EXIF data, strip GPS metadata, blur faces, PII redaction, anonymize image, offline redaction tool, privacy" />
-  <meta name="author" content="RedactIt contributors" />
+  <meta name="author" content="HushShot contributors" />
   <meta name="robots" content="index, follow, max-image-preview:large" />
   <meta name="theme-color" content="#0a0c11" />
   <meta name="color-scheme" content="dark" />
@@ -19,16 +19,16 @@
 
   <!-- Open Graph / Twitter -->
   <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="RedactIt" />
-  <meta property="og:title" content="RedactIt — Share the screenshot, not your secrets" />
+  <meta property="og:site_name" content="HushShot" />
+  <meta property="og:title" content="HushShot — Share the screenshot, not your secrets" />
   <meta property="og:description" content="Auto-blur cards, emails, phones, addresses, faces &amp; QR codes and strip hidden metadata from screenshots and PDFs. 100% on-device, free and open source." />
   <meta property="og:url" content="%VITE_SITE_URL%" />
   <meta property="og:image" content="%VITE_SITE_URL%og-image.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
-  <meta property="og:image:alt" content="A pay stub before and after RedactIt: SSN, address, card, phone, face and QR code blurred" />
+  <meta property="og:image:alt" content="A pay stub before and after HushShot: SSN, address, card, phone, face and QR code blurred" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="RedactIt — Share the screenshot, not your secrets" />
+  <meta name="twitter:title" content="HushShot — Share the screenshot, not your secrets" />
   <meta name="twitter:description" content="Free, offline redaction for screenshots &amp; PDFs. Auto-blurs PII and strips EXIF/GPS. Nothing is uploaded." />
   <meta name="twitter:image" content="%VITE_SITE_URL%og-image.png" />
 
@@ -38,7 +38,7 @@
     "@graph": [
       {
         "@type": "WebApplication",
-        "name": "RedactIt",
+        "name": "HushShot",
         "url": "%VITE_SITE_URL%",
         "description": "Browser-based tool that automatically detects and blurs personal information (credit cards, SSNs, emails, phone numbers, addresses, API keys, faces, barcodes) in screenshots and PDFs, and strips EXIF/GPS metadata. Everything runs locally.",
         "applicationCategory": "SecurityApplication",
@@ -53,7 +53,7 @@
       {
         "@type": "FAQPage",
         "mainEntity": [
-          { "@type": "Question", "name": "Are my files uploaded anywhere?", "acceptedAnswer": { "@type": "Answer", "text": "No. RedactIt has no server. OCR, face detection and barcode scanning run inside your browser tab, and a strict Content-Security-Policy blocks the page from sending your file anywhere." } },
+          { "@type": "Question", "name": "Are my files uploaded anywhere?", "acceptedAnswer": { "@type": "Answer", "text": "No. HushShot has no server. OCR, face detection and barcode scanning run inside your browser tab, and a strict Content-Security-Policy blocks the page from sending your file anywhere." } },
           { "@type": "Question", "name": "Can the blur be reversed?", "acceptedAnswer": { "@type": "Answer", "text": "Pixels are averaged into large blocks with random noise before any smoothing, so the original detail is discarded rather than hidden. For maximum certainty choose Blackout, which replaces the area with a solid fill." } },
           { "@type": "Question", "name": "Does it remove EXIF and GPS data?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Exports are re-encoded from raw pixels, so EXIF, GPS, camera serial numbers, XMP, IPTC and PDF author info are never copied. The output is re-opened and checked for metadata before you share it." } },
           { "@type": "Question", "name": "How do I redact a PDF?", "acceptedAnswer": { "@type": "Answer", "text": "Drop the PDF on the page. Each page is rendered, sensitive text is detected and hidden, and the pages are flattened into a new PDF so the text under the redaction no longer exists." } }
@@ -68,9 +68,9 @@
   <div class="bg-glow" aria-hidden="true"></div>
 
   <header class="topbar">
-    <a class="brand" href="#" id="brand" aria-label="RedactIt home">
+    <a class="brand" href="#" id="brand" aria-label="HushShot home">
       <svg viewBox="0 0 64 64" width="30" height="30" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8b5cf6"/><stop offset="1" stop-color="#22d3ee"/></linearGradient></defs><path d="M32 4 8 13v17c0 15 10 26 24 30 14-4 24-15 24-30V13z" fill="url(#lg)"/><rect x="18" y="22" width="28" height="6" rx="3" fill="#0b0d12" opacity=".85"/><rect x="18" y="32" width="20" height="6" rx="3" fill="#0b0d12" opacity=".85"/><rect x="18" y="42" width="24" height="6" rx="3" fill="#0b0d12" opacity=".55"/></svg>
-      <span>Redact<b>It</b></span>
+      <span>Hush<b>Shot</b></span>
     </a>
     <div class="top-right">
       <span class="pill" title="Everything runs in your browser. Files are never uploaded."><i class="dot"></i> 100% on-device · nothing uploaded</span>
@@ -78,13 +78,13 @@
     </div>
   </header>
 
-  <noscript><p class="error">RedactIt runs entirely in your browser and needs JavaScript enabled.</p></noscript>
+  <noscript><p class="error">HushShot runs entirely in your browser and needs JavaScript enabled.</p></noscript>
   <main>
     <!-- ───────────── Landing ───────────── -->
     <section id="landing">
       <div class="hero">
         <h1>Share the screenshot.<br /><span class="grad">Not your secrets.</span></h1>
-        <p class="lede">Drop an image or PDF. RedactIt finds and hides card numbers, emails, phone numbers, addresses, faces and barcodes — and wipes the hidden metadata — in seconds.</p>
+        <p class="lede">Drop an image or PDF. HushShot finds and hides card numbers, emails, phone numbers, addresses, faces and barcodes — and wipes the hidden metadata — in seconds.</p>
       </div>
 
       <label id="dropzone" class="dropzone" tabindex="0">
@@ -128,7 +128,7 @@
 
       <section class="faq" aria-labelledby="faq-title">
         <h2 id="faq-title">Frequently asked questions</h2>
-        <details><summary>Are my files uploaded anywhere?</summary><p>No. RedactIt has no server. OCR, face detection and barcode scanning run inside your browser tab, and a strict Content-Security-Policy blocks the page from sending your file anywhere. Open your browser's Network tab and check — dropping a file causes zero requests.</p></details>
+        <details><summary>Are my files uploaded anywhere?</summary><p>No. HushShot has no server. OCR, face detection and barcode scanning run inside your browser tab, and a strict Content-Security-Policy blocks the page from sending your file anywhere. Open your browser's Network tab and check — dropping a file causes zero requests.</p></details>
         <details><summary>Can the blur be reversed?</summary><p>Pixels are averaged into large blocks with random noise <em>before</em> any smoothing, so the detail is discarded, not hidden. For maximum certainty pick <b>Blackout</b>, which replaces the area with a solid fill.</p></details>
         <details><summary>Does it remove EXIF, GPS and other metadata?</summary><p>Yes. The export is re-encoded from raw pixels, so EXIF, GPS coordinates, camera serial numbers, XMP, IPTC and PDF author info are never copied — and the saved file is re-opened and checked.</p></details>
         <details><summary>How do I redact a PDF?</summary><p>Drop it here. Every page is rendered, sensitive text is detected and hidden, and the pages are flattened into a new PDF, so the text beneath a redaction no longer exists. (Up to 60 pages; the output isn't text-selectable.)</p></details>
@@ -204,7 +204,7 @@
   <div id="dragveil" class="dragveil" hidden><div>Drop to shield it 🛡️</div></div>
 
   <footer class="foot">
-    <span>RedactIt · MIT licensed · <a href="./wiki/">Docs &amp; wiki</a> · <a href="https://github.com/SYasJ/redactit" target="_blank" rel="noopener noreferrer">Source on GitHub</a></span>
+    <span>HushShot · MIT licensed · <a href="./wiki/">Docs &amp; wiki</a> · <a href="https://github.com/SYasJ/hushshot" target="_blank" rel="noopener noreferrer">Source on GitHub</a></span>
     <span>Your files never leave this tab.</span>
   </footer>
 </body>
