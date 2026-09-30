@@ -8,7 +8,7 @@
 
 **Drop an image or PDF → sensitive info is auto-blurred → click Save.**
 
-### [▶ Try it live — syasj.github.io/redactit](https://syasj.github.io/redactit/)
+### [▶ Try it live — syasj.github.io/redactit](https://syasj.github.io/redactit/) · [📖 Read the wiki](https://syasj.github.io/redactit/wiki/)
 
 Cards, emails, phones, addresses, faces, barcodes — gone. Hidden metadata — gone. Nothing ever leaves your device.
 

@@ -1,0 +1,715 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'none'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; object-src 'none'; base-uri 'none'; form-action 'none'" />
+  <meta name="referrer" content="no-referrer" />
+  <title>RedactIt Wiki — Documentation, User Guide &amp; Security Model</title>
+  <meta name="description" content="Complete documentation for RedactIt, the free offline screenshot and PDF redaction tool: user guide, detection reference, metadata stripping, security model, architecture, configuration, deployment and contributing." />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#0a0c11" />
+  <link rel="canonical" href="https://syasj.github.io/redactit/wiki/" />
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="RedactIt Wiki — Documentation" />
+  <meta property="og:description" content="User guide, detection reference, security model and developer docs for RedactIt." />
+  <meta property="og:url" content="https://syasj.github.io/redactit/wiki/" />
+  <meta property="og:image" content="https://syasj.github.io/redactit/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <style>
+    :root {
+      --bg: #f7f8fb; --surface: #ffffff; --surface-2: #f0f2f7; --line: #e2e6ef; --text: #161a23; --muted: #5a6275;
+      --accent: #7c3aed; --accent-2: #0891b2; --good: #059669; --warn: #b45309; --bad: #dc2626;
+      --code-bg: #0f1219; --code-text: #e6e9f2;
+      --grad: linear-gradient(135deg, #8b5cf6, #22d3ee);
+      --radius: 14px; --side: 280px;
+      color-scheme: light;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0a0c11; --surface: #12151d; --surface-2: #171b25; --line: #232838; --text: #eceff7; --muted: #8e97ad;
+        --accent: #a78bfa; --accent-2: #22d3ee; --good: #34d399; --warn: #fbbf24; --bad: #f87171;
+        --code-bg: #0c0f15; --code-text: #e6e9f2;
+        color-scheme: dark;
+      }
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 76px; }
+    body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.65 Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; -webkit-font-smoothing: antialiased; }
+    a { color: var(--accent-2); text-underline-offset: 3px; }
+    a:hover { color: var(--accent); }
+    :focus-visible { outline: 2px solid var(--accent-2); outline-offset: 2px; border-radius: 4px; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+    /* top bar */
+    .top { position: sticky; top: 0; z-index: 10; display: flex; align-items: center; gap: 16px; height: 60px; padding: 0 clamp(16px, 3vw, 32px);
+      background: color-mix(in srgb, var(--bg) 82%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+    .brand { display: inline-flex; align-items: center; gap: 10px; font-weight: 800; font-size: 18px; letter-spacing: -.02em; color: var(--text); text-decoration: none; }
+    .brand b { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .brand small { font-weight: 600; font-size: 13px; color: var(--muted); letter-spacing: 0; padding: 2px 8px; border: 1px solid var(--line); border-radius: 999px; }
+    .top nav { margin-left: auto; display: flex; gap: 6px; flex-wrap: nowrap; }
+    .top nav a { font-size: 14px; font-weight: 600; color: var(--muted); text-decoration: none; padding: 7px 12px; border-radius: 10px; white-space: nowrap; }
+    .top nav a:hover { color: var(--text); background: var(--surface-2); }
+    .top nav a.cta { color: #071016; background: var(--grad); }
+
+    /* layout */
+    .layout { display: grid; grid-template-columns: var(--side) minmax(0, 1fr); max-width: 1320px; margin: 0 auto; }
+    .side { position: sticky; top: 60px; align-self: start; height: calc(100vh - 60px); overflow-y: auto; padding: 28px 18px 40px clamp(16px, 3vw, 32px); border-right: 1px solid var(--line); }
+    .side h2 { font-size: 11.5px; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin: 22px 0 6px; }
+    .side h2:first-child { margin-top: 0; }
+    .side ul { list-style: none; margin: 0; padding: 0; }
+    .side a { display: block; padding: 5px 10px; margin: 1px 0; border-radius: 8px; font-size: 14.5px; color: var(--text); text-decoration: none; }
+    .side a:hover { background: var(--surface-2); }
+    .side ul ul a { font-size: 13.5px; color: var(--muted); padding-left: 22px; }
+    main { min-width: 0; padding: 36px clamp(16px, 4vw, 56px) 80px; }
+    .doc { max-width: 860px; }
+
+    /* hero */
+    .hero { padding: 8px 0 26px; border-bottom: 1px solid var(--line); margin-bottom: 8px; }
+    .eyebrow { display: inline-block; font-size: 12.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+    .hero h1 { font-size: clamp(34px, 5vw, 50px); line-height: 1.06; letter-spacing: -.035em; margin: 0 0 14px; }
+    .hero h1 span { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .hero p { font-size: 18.5px; color: var(--muted); margin: 0 0 20px; max-width: 700px; }
+    .badges { display: flex; flex-wrap: wrap; gap: 8px; }
+    .badge { font-size: 13px; font-weight: 600; padding: 5px 12px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); color: var(--muted); }
+    .badge i { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--good); margin-right: 7px; vertical-align: 1px; }
+
+    /* content */
+    section { padding-top: 34px; }
+    h2.h { font-size: 29px; letter-spacing: -.02em; line-height: 1.2; margin: 0 0 6px; padding-top: 10px; }
+    h2.h .num { font-size: 14px; font-weight: 800; color: var(--accent); margin-right: 10px; vertical-align: 4px; }
+    .sub { color: var(--muted); margin: 0 0 18px; }
+    h3 { font-size: 20px; letter-spacing: -.01em; margin: 30px 0 8px; }
+    h4 { font-size: 16px; margin: 20px 0 6px; }
+    p, li { max-width: 78ch; }
+    ul.list, ol.list { padding-left: 22px; }
+    ul.list li, ol.list li { margin: 5px 0; }
+    code { font: 0.88em/1.4 ui-monospace, 'SF Mono', Menlo, Consolas, monospace; background: var(--surface-2); border: 1px solid var(--line); padding: 1px 6px; border-radius: 6px; }
+    pre { background: var(--code-bg); color: var(--code-text); border-radius: 12px; padding: 16px 18px; overflow-x: auto; font: 13.5px/1.6 ui-monospace, 'SF Mono', Menlo, Consolas, monospace; border: 1px solid var(--line); }
+    pre code { background: none; border: 0; padding: 0; font-size: inherit; color: inherit; }
+    pre .c { color: #7f8aa3; } pre .k { color: #c4b5fd; } pre .s { color: #67e8f9; } pre .p { color: #a78bfa; user-select: none; }
+    kbd { font: 12.5px ui-monospace, Menlo, monospace; padding: 2px 7px; border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 6px; background: var(--surface); }
+    hr { border: 0; border-top: 1px solid var(--line); margin: 34px 0 0; }
+
+    .table-wrap { overflow-x: auto; margin: 14px 0; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
+    table { width: 100%; border-collapse: collapse; font-size: 14.5px; }
+    th, td { text-align: left; vertical-align: top; padding: 10px 14px; border-bottom: 1px solid var(--line); }
+    th { font-size: 12px; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); background: var(--surface-2); white-space: nowrap; }
+    tr:last-child td { border-bottom: 0; }
+    td code { white-space: nowrap; }
+
+    .callout { display: flex; gap: 12px; padding: 14px 16px; border-radius: 12px; margin: 16px 0; border: 1px solid; font-size: 15px; }
+    .callout > b:first-child { flex: none; font-size: 17px; line-height: 1.5; }
+    .callout p { margin: 0; }
+    .callout.info { background: color-mix(in srgb, var(--accent-2) 9%, transparent); border-color: color-mix(in srgb, var(--accent-2) 35%, transparent); }
+    .callout.warn { background: color-mix(in srgb, var(--warn) 9%, transparent); border-color: color-mix(in srgb, var(--warn) 35%, transparent); }
+    .callout.good { background: color-mix(in srgb, var(--good) 9%, transparent); border-color: color-mix(in srgb, var(--good) 35%, transparent); }
+
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin: 16px 0; }
+    .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px 18px; }
+    .card h4 { margin: 0 0 4px; font-size: 15.5px; }
+    .card p { margin: 0; font-size: 14.5px; color: var(--muted); }
+    a.card { text-decoration: none; color: inherit; transition: border-color .15s, transform .15s; }
+    a.card:hover { border-color: var(--accent-2); transform: translateY(-2px); }
+
+    .steps { counter-reset: s; list-style: none; padding: 0; margin: 16px 0; }
+    .steps > li { counter-increment: s; position: relative; padding: 0 0 18px 48px; }
+    .steps > li::before { content: counter(s); position: absolute; left: 0; top: 0; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; background: var(--grad); color: #071016; font-weight: 800; font-size: 14px; }
+    .steps > li::after { content: ''; position: absolute; left: 14.5px; top: 34px; bottom: 4px; width: 1px; background: var(--line); }
+    .steps > li:last-child::after { display: none; }
+    .steps b { display: block; }
+
+    figure { margin: 18px 0; }
+    figure img { display: block; width: 100%; height: auto; border-radius: 12px; border: 1px solid var(--line); background: var(--surface); }
+    figcaption { font-size: 13.5px; color: var(--muted); margin-top: 8px; }
+    .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+    .gallery figure { margin: 0; }
+
+    .diagram { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; margin: 16px 0; overflow-x: auto; }
+    .diagram svg { display: block; min-width: 640px; width: 100%; height: auto; }
+    .diagram .box { fill: var(--surface-2); stroke: var(--line); }
+    .diagram .box.hl { stroke: var(--accent); }
+    .diagram text { fill: var(--text); font: 600 13px Inter, system-ui, sans-serif; }
+    .diagram text.m { fill: var(--muted); font-weight: 500; font-size: 11.5px; }
+    .diagram .arr { stroke: var(--muted); stroke-width: 1.5; fill: none; marker-end: url(#ah); }
+    .diagram marker path { fill: var(--muted); }
+
+    details.faq { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px 16px; margin: 8px 0; }
+    details.faq summary { cursor: pointer; font-weight: 650; }
+    details.faq[open] summary { margin-bottom: 6px; }
+    details.faq p { margin: 6px 0 0; color: var(--muted); }
+
+    .pill { display: inline-block; font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 999px; }
+    .pill.high { color: var(--bad); background: color-mix(in srgb, var(--bad) 12%, transparent); }
+    .pill.med { color: var(--warn); background: color-mix(in srgb, var(--warn) 12%, transparent); }
+    .pill.low { color: var(--good); background: color-mix(in srgb, var(--good) 12%, transparent); }
+
+    footer { border-top: 1px solid var(--line); padding: 24px clamp(16px, 3vw, 32px); color: var(--muted); font-size: 14px; display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; }
+
+    @media (max-width: 960px) {
+      .layout { grid-template-columns: 1fr; }
+      .side { position: static; height: auto; border-right: 0; border-bottom: 1px solid var(--line); padding: 20px 16px; }
+      .side > ul { columns: 2; column-gap: 16px; }
+      .side ul ul { display: none; }
+      .side li { break-inside: avoid; }
+      .top nav a:not(.cta) { display: none; }
+    }
+    @media (max-width: 520px) {
+      .side > ul { columns: 1; }
+      .brand small { display: none; }
+    }
+    @media print {
+      .top, .side { display: none; }
+      .layout { display: block; }
+      pre { white-space: pre-wrap; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="top">
+  <a class="brand" href="./" aria-label="RedactIt Wiki home">
+    <svg viewBox="0 0 64 64" width="28" height="28" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8b5cf6"/><stop offset="1" stop-color="#22d3ee"/></linearGradient></defs><path d="M32 4 8 13v17c0 15 10 26 24 30 14-4 24-15 24-30V13z" fill="url(#lg)"/><rect x="18" y="22" width="28" height="6" rx="3" fill="#0b0d12" opacity=".85"/><rect x="18" y="32" width="20" height="6" rx="3" fill="#0b0d12" opacity=".85"/><rect x="18" y="42" width="24" height="6" rx="3" fill="#0b0d12" opacity=".55"/></svg>
+    <span>Redact<b>It</b></span><small>Wiki</small>
+  </a>
+  <nav aria-label="Primary">
+    <a href="#user-guide">Guide</a>
+    <a href="#security">Security</a>
+    <a href="#developers">Developers</a>
+    <a href="https://github.com/SYasJ/redactit" rel="noopener noreferrer">GitHub</a>
+    <a class="cta" href="../">Open the app →</a>
+  </nav>
+</header>
+
+<div class="layout">
+  <aside class="side" aria-label="Table of contents">
+    <h2>Getting started</h2>
+    <ul>
+      <li><a href="#overview">1 · Overview</a></li>
+      <li><a href="#quick-start">2 · Quick start</a>
+        <ul><li><a href="#qs-online">Use it online</a></li><li><a href="#qs-local">Run locally</a></li><li><a href="#qs-desktop">Desktop app</a></li></ul></li>
+      <li><a href="#user-guide">3 · User guide</a>
+        <ul><li><a href="#ug-open">Opening files</a></li><li><a href="#ug-review">Reviewing detections</a></li><li><a href="#ug-style">Styles &amp; strength</a></li><li><a href="#ug-export">Saving &amp; copying</a></li><li><a href="#ug-keys">Keyboard shortcuts</a></li></ul></li>
+      <li><a href="#examples">4 · Examples</a></li>
+    </ul>
+    <h2>Reference</h2>
+    <ul>
+      <li><a href="#detection">5 · What gets detected</a>
+        <ul><li><a href="#det-text">Text patterns</a></li><li><a href="#det-faces">Faces</a></li><li><a href="#det-barcodes">Barcodes &amp; QR</a></li></ul></li>
+      <li><a href="#metadata">6 · Metadata stripping</a></li>
+      <li><a href="#security">7 · Security &amp; privacy model</a>
+        <ul><li><a href="#sec-local">Local-only processing</a></li><li><a href="#sec-irreversible">Irreversible redaction</a></li><li><a href="#sec-threats">Threat model</a></li></ul></li>
+      <li><a href="#limits">8 · Limitations</a></li>
+    </ul>
+    <h2>Developers</h2>
+    <ul>
+      <li><a href="#architecture">9 · Architecture</a></li>
+      <li><a href="#developers">10 · Development</a>
+        <ul><li><a href="#dev-scripts">Scripts</a></li><li><a href="#dev-rule">Adding a rule</a></li><li><a href="#dev-tests">Testing</a></li><li><a href="#dev-debug">Debugging</a></li></ul></li>
+      <li><a href="#config">11 · Configuration</a></li>
+      <li><a href="#deploy">12 · Deployment</a></li>
+    </ul>
+    <h2>Help</h2>
+    <ul>
+      <li><a href="#troubleshooting">13 · Troubleshooting</a></li>
+      <li><a href="#faq">14 · FAQ</a></li>
+      <li><a href="#roadmap">15 · Roadmap</a></li>
+      <li><a href="#contributing">16 · Contributing &amp; license</a></li>
+    </ul>
+  </aside>
+
+  <main id="content">
+  <article class="doc">
+
+    <div class="hero">
+      <span class="eyebrow">Documentation</span>
+      <h1>RedactIt <span>Wiki</span></h1>
+      <p>Everything about RedactIt, the free screenshot and PDF redaction tool that runs entirely in your browser: how to use it, what it detects, why the redaction can't be undone, and how to build, extend and deploy it.</p>
+      <div class="badges">
+        <span class="badge"><i></i>100% on-device</span>
+        <span class="badge">MIT licensed</span>
+        <span class="badge">No accounts · no tracking</span>
+        <span class="badge">Works offline</span>
+      </div>
+    </div>
+
+    <!-- 1 -->
+    <section id="overview">
+      <h2 class="h"><span class="num">01</span>Overview</h2>
+      <p class="sub">A privacy shield for the screenshots and documents you share every day.</p>
+      <p>People paste screenshots into chat apps, AI assistants, bug trackers and social media constantly. Those images often contain a card number, a home address, a face, an API key or a QR code that logs someone in, and the file itself can carry hidden GPS coordinates and camera serial numbers. Drawing black boxes by hand is slow, easy to get wrong, and leaves the metadata untouched.</p>
+      <p>RedactIt finds that information for you, hides it, and writes a clean copy of the file with no hidden metadata. It has no backend: the text recognition, face detection and barcode scanning all run in your browser tab.</p>
+      <div class="cards">
+        <div class="card"><h4>🔍 Finds what matters</h4><p>Cards, SSNs, emails, phones, addresses, account numbers, birth dates, API keys, faces, barcodes and QR codes.</p></div>
+        <div class="card"><h4>🧼 Strips hidden data</h4><p>GPS, camera and serial numbers, capture dates, author info. The saved file is re-checked.</p></div>
+        <div class="card"><h4>🔒 Truly private</h4><p>No server. A strict Content-Security-Policy blocks the page from sending your file anywhere.</p></div>
+        <div class="card"><h4>💥 Irreversible</h4><p>Pixels are averaged and jittered before smoothing; PDFs are flattened. Nothing to "un-blur".</p></div>
+      </div>
+      <h3>Who it's for</h3>
+      <ul class="list">
+        <li><b>Job seekers</b> sharing pay stubs, offer letters or ID scans.</li>
+        <li><b>Remote workers and support staff</b> sharing screens, logs and error screenshots.</li>
+        <li><b>Developers</b> posting terminal output that might contain tokens or keys.</li>
+        <li><b>Creators</b> posting photos where bystanders' faces or location data should not be public.</li>
+        <li><b>Students and professionals</b> uploading forms to AI tools.</li>
+      </ul>
+    </section>
+
+    <!-- 2 -->
+    <section id="quick-start">
+      <h2 class="h"><span class="num">02</span>Quick start</h2>
+      <p class="sub">Use the hosted app, run it locally, or wrap it as a desktop app.</p>
+
+      <h3 id="qs-online">Use it online</h3>
+      <p>Open <a href="../"><b>syasj.github.io/redactit</b></a>. There's nothing to install and no sign-up. Drop a file, or click one of the eight built-in example documents to see it work. Once the page has loaded, it keeps working with no internet connection.</p>
+
+      <h3 id="qs-local">Run it locally</h3>
+      <p>Requires <b>Node.js 18+</b> and a modern browser (Chrome/Edge 119+, Firefox 121+, Safari 17.4+).</p>
+<pre><code><span class="p">$ </span>git clone https://github.com/SYasJ/redactit
+<span class="p">$ </span>cd redactit
+<span class="p">$ </span>npm install        <span class="c"># also copies OCR / face / PDF assets into public/vendor</span>
+<span class="p">$ </span>npm run dev        <span class="c"># → http://localhost:5173</span></code></pre>
+      <p>Production build: plain static files you can host anywhere (GitHub Pages, Netlify, S3, a USB stick):</p>
+<pre><code><span class="p">$ </span>npm run build      <span class="c"># → dist/</span>
+<span class="p">$ </span>npm run preview    <span class="c"># serve dist/ at http://localhost:4173</span></code></pre>
+      <div class="callout info"><b>ℹ️</b><p>The strict Content-Security-Policy is injected into <b>production builds only</b>, because Vite's dev server needs inline scripts for hot reload. Use <code>npm run preview</code> when you want to test the locked-down version.</p></div>
+
+      <h3 id="qs-desktop">Desktop app (experimental)</h3>
+      <p>A small Electron shell serves the built app from a loopback-only server and blocks every request that isn't to that server, so it's offline by design.</p>
+<pre><code><span class="p">$ </span>npm run desktop        <span class="c"># build + launch</span>
+<span class="p">$ </span>npm run desktop:pack   <span class="c"># installers (dmg / nsis / AppImage) → release/</span></code></pre>
+    </section>
+
+    <!-- 3 -->
+    <section id="user-guide">
+      <h2 class="h"><span class="num">03</span>User guide</h2>
+      <p class="sub">From dropping a file to sharing a clean copy, usually in under a minute.</p>
+      <ol class="steps">
+        <li><b>Drop</b>Drag an image or PDF onto the page, click to browse, or paste a screenshot with <kbd>Ctrl</kbd>/<kbd>⌘</kbd>+<kbd>V</kbd>.</li>
+        <li><b>Scan</b>Text recognition, barcode and face detection run in sequence. Detected items are hidden as soon as each step finishes.</li>
+        <li><b>Review</b>Click a box to un-hide or re-hide it, switch whole categories off, or drag to hide anything that was missed.</li>
+        <li><b>Save</b>Download the sanitized file, or copy it to the clipboard. The output is re-opened and checked for metadata.</li>
+      </ol>
+      <figure><img src="img/screenshot-app.jpg" alt="RedactIt workspace: the redacted pay stub on the left, the scan results, category switches, style controls and Save button on the right" width="1360" height="900" loading="lazy" /><figcaption>The workspace: preview with detection boxes (left), scan progress, categories, style and export (right).</figcaption></figure>
+
+      <h3 id="ug-open">Opening files</h3>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Input</th><th>Supported</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td>Images</td><td>PNG, JPG, WebP, GIF, BMP, AVIF</td><td>EXIF orientation is applied, so rotated phone photos come out upright. Transparency is flattened onto white. Images larger than 9,000 px on a side are scaled down.</td></tr>
+          <tr><td>PDF</td><td>Up to 60 pages</td><td>Each page is rendered at 144 dpi. Extra pages beyond 60 are skipped, with a notice.</td></tr>
+          <tr><td>Clipboard</td><td>Any image</td><td>Paste anywhere on the page. Handy right after taking a screenshot.</td></tr>
+          <tr><td>HEIC / HEIF</td><td>No</td><td>Browsers can't decode HEIC. On iPhone: <i>Settings → Camera → Formats → Most Compatible</i>, or convert to JPG first.</td></tr>
+        </tbody>
+      </table></div>
+      <p>RedactIt handles one document at a time. If several files are dropped, the first one is opened.</p>
+
+      <h3 id="ug-review">Reviewing detections</h3>
+      <ul class="list">
+        <li><b>Solid cyan box:</b> the item is hidden. Hover to see its category and a masked hint (e.g. <code>j••••••••</code>).</li>
+        <li><b>Dashed amber box:</b> the item is <em>not</em> hidden. Click it to hide it again.</li>
+        <li><b>Categories panel:</b> each category has a count and a switch. Turning a category off reveals all of its items at once, which is useful if, say, you want phone numbers visible but everything else hidden.</li>
+        <li><b>Draw your own box:</b> press and drag on any empty part of the image. Manual boxes appear under <i>Drawn by you</i> and have a red <b>×</b> to remove them.</li>
+        <li><b>Hold to compare:</b> press and hold <i>👁 Hold to compare</i> to see the original. Release to return to the redacted view.</li>
+        <li><b>Multi-page PDFs:</b> use the ‹ › buttons or the arrow keys. Every page is scanned; counts include all pages.</li>
+      </ul>
+      <div class="callout warn"><b>⚠️</b><p><b>Always glance at the preview before sharing.</b> Detection is good, not perfect: names, handwriting and unusual fonts can be missed. The drag-to-hide tool covers anything the scanner didn't catch.</p></div>
+
+      <h3 id="ug-style">Styles &amp; strength</h3>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Style</th><th>Looks like</th><th>Best for</th></tr></thead>
+        <tbody>
+          <tr><td><b>Blur</b> <span class="pill low">default</span></td><td>Soft, smooth smudge</td><td>Social posts, chat apps, screenshots for AI tools</td></tr>
+          <tr><td><b>Pixelate</b></td><td>Classic mosaic</td><td>When it should be obvious that something was hidden</td></tr>
+          <tr><td><b>Blackout</b></td><td>Solid bar (ellipse over faces)</td><td>Legal, HR, medical, anything where you want zero doubt</td></tr>
+        </tbody>
+      </table></div>
+      <p>The <b>Strength</b> slider makes the mosaic coarser. All three styles destroy the underlying detail. See <a href="#sec-irreversible">Irreversible redaction</a>.</p>
+
+      <h3 id="ug-export">Saving &amp; copying</h3>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Source</th><th>Output formats</th><th>Details</th></tr></thead>
+        <tbody>
+          <tr><td>Image</td><td>PNG (lossless) or JPG</td><td>JPG is re-encoded at quality 93. The default matches the input type.</td></tr>
+          <tr><td>PDF</td><td>PDF (pages flattened)</td><td>Each page becomes an image. The text layer is gone, so the output isn't text-selectable.</td></tr>
+          <tr><td>Any image</td><td>Copy to clipboard (PNG)</td><td>Paste straight into Slack, Discord, email or an AI chat. Not available for PDFs.</td></tr>
+        </tbody>
+      </table></div>
+      <p>Saved files are named <code>&lt;original&gt;-redacted.&lt;ext&gt;</code>. After saving, a note confirms how many regions were hidden, how many metadata fields were removed, and that the re-check found <b>0 metadata fields</b> in the output.</p>
+      <div class="callout info"><b>ℹ️</b><p>The <b>file name</b> isn't scrubbed beyond adding <code>-redacted</code>. If it contains your name, rename the file before sharing it.</p></div>
+
+      <h3 id="ug-keys">Keyboard shortcuts</h3>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Keys</th><th>Action</th></tr></thead>
+        <tbody>
+          <tr><td><kbd>Ctrl</kbd>/<kbd>⌘</kbd> + <kbd>V</kbd></td><td>Open a screenshot from the clipboard</td></tr>
+          <tr><td><kbd>Enter</kbd> / <kbd>Space</kbd> on the drop zone</td><td>Open the file picker</td></tr>
+          <tr><td><kbd>←</kbd> <kbd>→</kbd></td><td>Previous / next PDF page</td></tr>
+          <tr><td><kbd>Enter</kbd> / <kbd>Space</kbd> on a category</td><td>Toggle that category</td></tr>
+          <tr><td>Hold <kbd>Space</kbd> on <i>Hold to compare</i></td><td>Show the original while held</td></tr>
+          <tr><td><kbd>Tab</kbd></td><td>Move between the panel controls (buttons, categories, style, slider, format)</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <!-- 4 -->
+    <section id="examples">
+      <h2 class="h"><span class="num">04</span>Examples</h2>
+      <p class="sub">Real output from the production build. All people, numbers and addresses are fictional; portraits are AI-generated.</p>
+      <p>Every example can be opened with one click from the app's landing page. Each sheet shows the original followed by Blur, Pixelate and Blackout.</p>
+      <div class="gallery">
+        <figure><img src="img/paystub-comparison.jpg" alt="Pay stub before and after" loading="lazy" /><figcaption><b>🧾 Pay stub:</b> SSN, DOB, 2 addresses, email, 2 phones, card, account + routing numbers, face, QR code and Code 128 barcode.</figcaption></figure>
+        <figure><img src="img/chat-dark-mode-comparison.jpg" alt="Dark-mode chat before and after" loading="lazy" /><figcaption><b>💬 Dark-mode chat:</b> password, Stripe and AWS keys, address, phone, email. Dark themes are inverted before OCR.</figcaption></figure>
+        <figure><img src="img/id-card-comparison.jpg" alt="Driver's license before and after" loading="lazy" /><figcaption><b>🪪 Driver's license:</b> licence number, address, date of birth, face, barcode.</figcaption></figure>
+        <figure><img src="img/medical-form-comparison.jpg" alt="Medical form before and after" loading="lazy" /><figcaption><b>🏥 Medical form:</b> record number, DOB, policy, SSN, and a phone number that wraps across two lines.</figcaption></figure>
+        <figure><img src="img/checkout-comparison.jpg" alt="Checkout page before and after" loading="lazy" /><figcaption><b>💳 Checkout page:</b> card number, billing address, email, phone, payment QR code.</figcaption></figure>
+        <figure><img src="img/group-photo-comparison.jpg" alt="Group photo before and after" loading="lazy" /><figcaption><b>👨‍👩‍👧 Group photo:</b> all four faces (elliptical masks); metadata stripped.</figcaption></figure>
+        <figure><img src="img/lease-pdf-page2-comparison.jpg" alt="Lease PDF page before and after" loading="lazy" /><figcaption><b>📄 Lease PDF:</b> SSN, DOB, card, address, email. Flattened, so the text underneath is gone.</figcaption></figure>
+      </div>
+    </section>
+
+    <!-- 5 -->
+    <section id="detection">
+      <h2 class="h"><span class="num">05</span>What gets detected</h2>
+      <p class="sub">Text rules run on OCR output; faces and barcodes use dedicated detectors.</p>
+
+      <h3 id="det-text">Text patterns</h3>
+      <p>Each OCR line is matched against the rules in <code>src/detect/patterns.js</code>. Matches are mapped back to pixel boxes, trimmed to just the sensitive part (e.g. only the address in <code>Email:jane@x.com</code>), and extended across line breaks for phones, addresses and cards.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Category</th><th>Examples</th><th>How it's recognised</th></tr></thead>
+        <tbody>
+          <tr><td>💳 Credit cards</td><td><code>4242 4242 4242 4242</code>, Amex <code>3782 822463 10005</code>, masked <code>**** 4242</code></td><td>13–19 digits + <b>Luhn checksum</b>. Well-formed 4-4-4-4 / 4-6-5 groups are kept even if OCR misreads one digit.</td></tr>
+          <tr><td>🪪 SSN / national ID</td><td><code>123-45-6789</code>, <code>SSN: 123456789</code>, TIN, EIN, SIN</td><td>Pattern plus invalid-range filter (<code>000</code>, <code>666</code>, <code>9xx</code>), or a label followed by digits.</td></tr>
+          <tr><td>✉️ Emails</td><td><code>jane.doe+work@example.co.uk</code></td><td>RFC-style address pattern.</td></tr>
+          <tr><td>📞 Phone numbers</td><td><code>(415) 555-2671</code>, <code>+1 415 555 2671</code>, <code>+44 20 7946 0958</code></td><td>North American formats and international <code>+</code> numbers with 8–15 digits.</td></tr>
+          <tr><td>🏠 Addresses</td><td><code>742 Evergreen Terrace, Apt 4B</code>, <code>Springfield, IL 62704</code>, <code>PO Box 12</code></td><td>Number + street suffix, City-State-ZIP, Canadian and UK postcodes, PO boxes.</td></tr>
+          <tr><td>🏦 Account numbers</td><td><code>Account No: 00123456789</code>, <code>Routing # 021000021</code>, MRN, policy, IBAN</td><td>Label-aware: only the <em>value</em> is hidden, the label stays readable.</td></tr>
+          <tr><td>🎂 Dates of birth</td><td><code>DOB: 04/12/1988</code>, <code>Date of Birth March 3, 1990</code></td><td>Only when labelled. Ordinary dates are left alone.</td></tr>
+          <tr><td>🔑 API keys &amp; tokens</td><td><code>sk-…</code>, <code>AKIA…</code>, <code>ghp_…</code>, <code>xoxb-…</code>, JWTs, <code>password: …</code></td><td>Known vendor prefixes, plus <code>key = value</code> for passwords, secrets and tokens. Also catches keys whose underscores OCR read as spaces.</td></tr>
+        </tbody>
+      </table></div>
+
+      <h3 id="det-faces">Faces</h3>
+      <p>Faces are found with the SSD-MobileNet v1 model via TensorFlow.js (WebGL when available, CPU otherwise). Two details make it work on real-world images:</p>
+      <ul class="list">
+        <li><b>Letterboxing:</b> each scan window is padded to a square so wide or tall images don't distort faces.</li>
+        <li><b>Tiling:</b> images larger than 640 px are also scanned in overlapping 2×2 tiles (3×3 above 2,200 px) so small faces in group photos are found. Duplicates are merged with non-maximum suppression.</li>
+      </ul>
+      <p>Faces are covered with an ellipse and extra margin. Minimum confidence is 0.55.</p>
+
+      <h3 id="det-barcodes">Barcodes &amp; QR codes</h3>
+      <p>RedactIt uses the browser's native <code>BarcodeDetector</code> when present (Chrome on macOS, Android and ChromeOS). Elsewhere it falls back to ZXing in pure JavaScript, trying several scales (100%, 50%, 70%, 35%, 150%) because soft screenshot codes often decode only at a different size.</p>
+      <p>Supported: QR, Data Matrix, Aztec, PDF417, Code 128, Code 39, EAN-13/8, UPC-A/E, ITF, Codabar. For 1D codes, ZXing only reports a scan line, so the full bar height is estimated from the image. A structure check rejects text that was mistaken for bars.</p>
+    </section>
+
+    <!-- 6 -->
+    <section id="metadata">
+      <h2 class="h"><span class="num">06</span>Metadata stripping</h2>
+      <p class="sub">What is hiding in your file, shown before it's removed.</p>
+      <p>When a file opens, the <i>Hidden metadata</i> card lists what was found, colour-coded by risk:</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Field</th><th>Risk</th><th>Why it matters</th></tr></thead>
+        <tbody>
+          <tr><td>📍 GPS location</td><td><span class="pill high">high</span></td><td>Can reveal your home or workplace to the metre.</td></tr>
+          <tr><td>🔢 Camera serial number</td><td><span class="pill high">high</span></td><td>Links photos across accounts to one device.</td></tr>
+          <tr><td>👤 Owner / author</td><td><span class="pill high">high</span></td><td>Your name embedded in the file.</td></tr>
+          <tr><td>⛰️ GPS altitude, 📷 camera model, 🔭 lens serial</td><td><span class="pill med">medium</span></td><td>Device fingerprinting.</td></tr>
+          <tr><td>🕒 Capture date, 💬 description, 🧭 unique image ID</td><td><span class="pill med">medium</span></td><td>Timeline and identity clues.</td></tr>
+          <tr><td>🛠️ Editing software, ©️ copyright</td><td><span class="pill low">low</span></td><td>Minor, but still removed.</td></tr>
+          <tr><td>📄 PDF author, title, keywords, creator, producer, dates</td><td><span class="pill med">med–high</span></td><td>Often contain real names and internal document titles.</td></tr>
+        </tbody>
+      </table></div>
+      <h3>How removal works</h3>
+      <ul class="list">
+        <li><b>Nothing is copied from the source file.</b> The export is re-encoded from raw canvas pixels, so EXIF, XMP, IPTC, embedded thumbnails, ICC profiles and PDF info dictionaries have no way to come along.</li>
+        <li><b>PDFs are written with metadata auto-stamping off</b>: no <code>Producer</code>, no creation or modification dates.</li>
+        <li><b>Verification:</b> after writing, the app re-opens its own output and checks it for metadata. If anything is found, the save note turns amber and asks you to report the bug.</li>
+      </ul>
+      <div class="callout info"><b>ℹ️</b><p>Dropping colour profiles can shift colours very slightly on wide-gamut photos. It's a side effect of removing every metadata block.</p></div>
+    </section>
+
+    <!-- 7 -->
+    <section id="security">
+      <h2 class="h"><span class="num">07</span>Security &amp; privacy model</h2>
+      <p class="sub">Bad redaction is worse than none, so the design assumes someone will try to undo it.</p>
+
+      <h3 id="sec-local">Local-only processing</h3>
+      <ul class="list">
+        <li><b>No backend exists.</b> OCR (Tesseract.js), face detection (TensorFlow.js), barcode decoding (ZXing) and PDF rendering (PDF.js) all run in your tab.</li>
+        <li><b>All models, WebAssembly and fonts are bundled</b> with the app. There are no CDN calls at runtime.</li>
+        <li><b>Content-Security-Policy</b> in production builds: <code>connect-src 'self'</code>, <code>form-action 'none'</code>, <code>object-src 'none'</code>, <code>base-uri 'none'</code>. Even a bug in the app couldn't send your file to another server.</li>
+        <li><b>Tested:</b> the end-to-end suite fails if the page makes a single request to another origin or logs any CSP violation.</li>
+        <li><b>No analytics, cookies, accounts or telemetry.</b></li>
+      </ul>
+
+      <h3 id="sec-irreversible">Irreversible redaction</h3>
+      <ol class="list">
+        <li><b>Average first, smooth second.</b> Blur and Pixelate first replace each block of pixels with its average colour, and only then smooth the result. The fine detail is discarded, not just obscured.</li>
+        <li><b>Coarse cells over text.</b> A line of text gets only about 1–2.4 cells across its height, larger than a glyph. Fine mosaics of a known font can be brute-forced back into text (the technique behind tools like <a href="https://github.com/spipm/Depix" rel="noopener noreferrer">Depix</a>), and coarse cells defeat that.</li>
+        <li><b>Random noise per block.</b> Each block's colour is jittered, so an attacker can't pixelate candidate text and look for an exact colour match.</li>
+        <li><b>Nothing is layered.</b> The output is a fresh set of pixels. There is no original hidden underneath, unlike PDF highlight annotations, which can simply be deleted.</li>
+        <li><b>PDFs are flattened.</b> Each page is rasterised, redacted and re-embedded as an image, so the text under a redaction no longer exists in the file.</li>
+        <li><b>Verified by OCR.</b> The end-to-end test runs OCR on the <em>exported</em> file and asserts that none of the sample's secrets can be read, while normal text still can.</li>
+      </ol>
+      <div class="callout good"><b>✅</b><p>For something extremely sensitive, choose <b>Blackout</b>. It replaces the area with a solid fill, so there is nothing left to analyse.</p></div>
+
+      <h3 id="sec-threats">Threat model</h3>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Threat</th><th>Mitigation</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>File uploaded to a server</td><td>No backend; CSP blocks outbound connections</td><td><span class="pill low">covered</span></td></tr>
+          <tr><td>Metadata leaks location / identity</td><td>Re-encode from pixels; post-export verification</td><td><span class="pill low">covered</span></td></tr>
+          <tr><td>Hidden PDF text layer under a box</td><td>Pages flattened to images</td><td><span class="pill low">covered</span></td></tr>
+          <tr><td>De-pixelation / de-blurring</td><td>Coarse cells, per-block noise, averaging before smoothing</td><td><span class="pill low">covered</span></td></tr>
+          <tr><td>Sensitive item not detected</td><td>Human review, manual boxes, category toggles</td><td><span class="pill med">user review</span></td></tr>
+          <tr><td>Sensitive info in the file name</td><td>Not changed beyond <code>-redacted</code></td><td><span class="pill med">rename manually</span></td></tr>
+          <tr><td>Context clues (layout, logos, visible names)</td><td>Out of scope for automatic detection</td><td><span class="pill high">not covered</span></td></tr>
+          <tr><td>Desktop wrapper reaching the network</td><td>Loopback-only server; every other request cancelled; path check keeps requests inside <code>dist/</code></td><td><span class="pill low">covered</span></td></tr>
+        </tbody>
+      </table></div>
+      <p>Found a way to recover redacted content or leak data? Please report it privately. See <a href="https://github.com/SYasJ/redactit/blob/main/SECURITY.md" rel="noopener noreferrer">SECURITY.md</a>, and only ever share fictional documents.</p>
+    </section>
+
+    <!-- 8 -->
+    <section id="limits">
+      <h2 class="h"><span class="num">08</span>Limitations</h2>
+      <p class="sub">RedactIt is a safety net, not a guarantee.</p>
+      <ul class="list">
+        <li><b>Names aren't detected.</b> They depend on context and would cause many false positives with pattern matching alone. Use the drag-to-hide tool.</li>
+        <li><b>OCR isn't perfect.</b> Tiny fonts, low contrast, handwriting, and rotated or curved text can be missed.</li>
+        <li><b>English-first.</b> Address rules are US/Canada/UK oriented; OCR uses the English model.</li>
+        <li><b>Faces:</b> heavily rotated, covered or tiny faces can be missed, and non-faces occasionally trigger.</li>
+        <li><b>Barcodes:</b> without the native detector, damaged or very small 1D codes can be missed.</li>
+        <li><b>Not detected by design:</b> license plates, signatures, logos, company names, free-form medical text.</li>
+        <li><b>PDFs</b> are limited to 60 pages and become image-only.</li>
+        <li><b>Performance:</b> the first scan loads about 15 MB of models. Face detection on CPU (no GPU acceleration) can be slow on large images.</li>
+      </ul>
+    </section>
+
+    <hr />
+
+    <!-- 9 -->
+    <section id="architecture">
+      <h2 class="h"><span class="num">09</span>Architecture</h2>
+      <p class="sub">A static single-page app: vanilla JavaScript, built with Vite, no framework.</p>
+      <div class="diagram" role="img" aria-label="Pipeline: file is decoded to canvas, then OCR, face and barcode detection run; OCR text goes through the pattern engine; all results become regions; regions are rendered in a live preview and exported from raw pixels, then the output is re-opened and verified.">
+        <svg viewBox="0 0 900 250" xmlns="http://www.w3.org/2000/svg">
+          <defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10z"/></marker></defs>
+          <rect class="box" x="10" y="95" width="120" height="60" rx="10"/><text x="70" y="121" text-anchor="middle">Drop file</text><text class="m" x="70" y="139" text-anchor="middle">image · PDF · paste</text>
+          <rect class="box" x="165" y="95" width="130" height="60" rx="10"/><text x="230" y="121" text-anchor="middle">Decode</text><text class="m" x="230" y="139" text-anchor="middle">loader.js → canvas</text>
+          <rect class="box" x="335" y="15" width="130" height="54" rx="10"/><text x="400" y="38" text-anchor="middle">OCR</text><text class="m" x="400" y="55" text-anchor="middle">Tesseract.js</text>
+          <rect class="box" x="335" y="98" width="130" height="54" rx="10"/><text x="400" y="121" text-anchor="middle">Barcodes / QR</text><text class="m" x="400" y="138" text-anchor="middle">native · ZXing</text>
+          <rect class="box" x="335" y="181" width="130" height="54" rx="10"/><text x="400" y="204" text-anchor="middle">Faces</text><text class="m" x="400" y="221" text-anchor="middle">SSD-MobileNet</text>
+          <rect class="box" x="500" y="15" width="130" height="54" rx="10"/><text x="565" y="38" text-anchor="middle">Pattern engine</text><text class="m" x="565" y="55" text-anchor="middle">regex · Luhn · labels</text>
+          <rect class="box hl" x="535" y="98" width="110" height="54" rx="10"/><text x="590" y="121" text-anchor="middle">Regions</text><text class="m" x="590" y="138" text-anchor="middle">toggle · draw</text>
+          <rect class="box" x="680" y="98" width="95" height="54" rx="10"/><text x="727" y="121" text-anchor="middle">Preview</text><text class="m" x="727" y="138" text-anchor="middle">effects.js</text>
+          <rect class="box hl" x="805" y="85" width="85" height="80" rx="10"/><text x="847" y="112" text-anchor="middle">Export</text><text class="m" x="847" y="130" text-anchor="middle">fresh pixels</text><text class="m" x="847" y="146" text-anchor="middle">+ verify</text>
+          <path class="arr" d="M130 125 H163"/>
+          <path class="arr" d="M295 115 C315 115 315 42 333 42"/>
+          <path class="arr" d="M295 125 H333"/>
+          <path class="arr" d="M295 135 C315 135 315 208 333 208"/>
+          <path class="arr" d="M465 42 H498"/>
+          <path class="arr" d="M565 69 V96"/>
+          <path class="arr" d="M465 125 H533"/>
+          <path class="arr" d="M465 208 C505 208 505 140 533 140"/>
+          <path class="arr" d="M645 125 H678"/>
+          <path class="arr" d="M775 125 H803"/>
+        </svg>
+      </div>
+      <h3>Modules</h3>
+      <div class="table-wrap"><table>
+        <thead><tr><th>File</th><th>Responsibility</th></tr></thead>
+        <tbody>
+          <tr><td><code>index.html</code></td><td>App shell: landing page, workspace, SEO metadata</td></tr>
+          <tr><td><code>src/main.js</code></td><td>UI controller: state, scan pipeline, overlay interactions, export</td></tr>
+          <tr><td><code>src/detect/patterns.js</code></td><td>Text rule engine. Pure JS, no DOM, unit-tested in Node</td></tr>
+          <tr><td><code>src/detect/textRegions.js</code></td><td>OCR words → character ranges → pixel boxes; wrapped lines; merging neighbours (pure)</td></tr>
+          <tr><td><code>src/detect/ocr.js</code></td><td>Tesseract worker; upscales small screenshots, inverts dark themes, filters low-confidence noise</td></tr>
+          <tr><td><code>src/detect/faces.js</code></td><td>Face detection with letterboxing, tiling and NMS</td></tr>
+          <tr><td><code>src/detect/barcodes.js</code></td><td>Native <code>BarcodeDetector</code> or multi-scale ZXing fallback</td></tr>
+          <tr><td><code>src/render/effects.js</code></td><td>Blur, pixelate and blackout rendering</td></tr>
+          <tr><td><code>src/io/loader.js</code></td><td>Images and PDFs → canvases</td></tr>
+          <tr><td><code>src/io/metadata.js</code></td><td>Reads metadata for display; verifies exports are clean</td></tr>
+          <tr><td><code>src/io/exporter.js</code></td><td>PNG / JPG / flattened-PDF writers, download and clipboard</td></tr>
+          <tr><td><code>desktop/main.cjs</code></td><td>Optional Electron wrapper with a loopback-only server</td></tr>
+        </tbody>
+      </table></div>
+      <p>Heavy modules (OCR, faces, barcodes, PDF, export) are loaded on demand with dynamic <code>import()</code>, so the landing page stays small. The OCR worker is reused across files and shut down when you click <i>New file</i>.</p>
+    </section>
+
+    <!-- 10 -->
+    <section id="developers">
+      <h2 class="h"><span class="num">10</span>Development</h2>
+      <p class="sub">Scripts, extending detection, and the test suite.</p>
+
+      <h3 id="dev-scripts">npm scripts</h3>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Command</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><td><code>npm run dev</code></td><td>Dev server with hot reload on port 5173</td></tr>
+          <tr><td><code>npm run build</code></td><td>Vendors offline assets, then builds <code>dist/</code> with the CSP injected</td></tr>
+          <tr><td><code>npm run preview</code></td><td>Serves the production build on port 4173</td></tr>
+          <tr><td><code>npm test</code></td><td>Unit tests (rules, box mapping, metadata, redaction cell size), under a second</td></tr>
+          <tr><td><code>npm run e2e -- &lt;url&gt;</code></td><td>Full pipeline in headless Chromium against a running build</td></tr>
+          <tr><td><code>npm run samples</code></td><td>Regenerates the fictional sample documents</td></tr>
+          <tr><td><code>npm run examples</code></td><td>Regenerates the before/after gallery in <code>docs/examples/</code></td></tr>
+          <tr><td><code>npm run desktop</code> / <code>desktop:pack</code></td><td>Launch or package the Electron wrapper</td></tr>
+        </tbody>
+      </table></div>
+
+      <h3 id="dev-rule">Adding a detection rule</h3>
+      <p>A rule is one object in the <code>RULES</code> array in <code>src/detect/patterns.js</code>:</p>
+<pre><code>{
+  <span class="c">// Example: an employee ID like "EMP-004521"</span>
+  <span class="k">type</span>: <span class="s">'account'</span>,                          <span class="c">// category id (see CATEGORIES)</span>
+  <span class="k">re</span>: <span class="s">/\bEmployee\s*ID\s*[:#]?\s*(EMP-\d{6})\b/gi</span>, <span class="c">// must use the g flag</span>
+  <span class="k">group</span>: 1,                                  <span class="c">// optional: hide only this capture group</span>
+  <span class="k">confidence</span>: 0.9,                           <span class="c">// or validate(match) → 0..1 (0 = reject)</span>
+}</code></pre>
+      <ol class="list">
+        <li>Add the rule object. Use <code>validate()</code> for checks a regex can't do, like a checksum.</li>
+        <li>For a <b>new category</b>, add it to <code>CATEGORIES</code> and <code>TEXT_TYPES</code> in <code>patterns.js</code>, and to <code>TAGS</code> and <code>CAT_ORDER</code> in <code>src/main.js</code>.</li>
+        <li>Add <b>positive and negative</b> cases to <code>tests/patterns.test.js</code>. False positives that hide harmless text are bugs too.</li>
+      </ol>
+<pre><code><span class="k">test</span>(<span class="s">'employee id'</span>, () =&gt; {
+  assert.equal(found(<span class="s">'Employee ID: EMP-004521'</span>, [<span class="s">'account'</span>])[0].s, <span class="s">'EMP-004521'</span>);
+  assert.deepEqual(found(<span class="s">'EMP-004521 was mentioned'</span>, [<span class="s">'account'</span>]), []);  <span class="c">// no label → no match</span>
+});</code></pre>
+
+      <h3 id="dev-tests">Testing</h3>
+<pre><code><span class="p">$ </span>npm test                                  <span class="c"># unit tests</span>
+<span class="p">$ </span>npm run build &amp;&amp; npm run preview &amp;
+<span class="p">$ </span>npm run e2e -- http://localhost:4173/     <span class="c"># end-to-end</span></code></pre>
+      <p>The end-to-end test drives the real UI against the <b>production build</b>, so the CSP is enforced. It asserts:</p>
+      <ul class="list">
+        <li>every category is detected on the sample pay stub;</li>
+        <li>OCR of the exported PNG can't read any secret, while normal text stays readable;</li>
+        <li>a JPEG with GPS and camera data comes out with no EXIF segment;</li>
+        <li>a 2-page PDF with a text layer and author metadata comes out with no selectable secrets and an empty info dictionary;</li>
+        <li>zero external requests, and zero console errors or CSP violations.</li>
+      </ul>
+      <p>CI (<code>.github/workflows/ci.yml</code>) runs unit tests, the build and the end-to-end test on every push and pull request.</p>
+
+      <h3 id="dev-debug">Debugging</h3>
+      <p>Open the app with <code>?debug</code> (e.g. <code>http://localhost:5173/?debug</code>) to expose <code>window.__redactit</code> in the console. It contains the live <code>state</code> (pages, OCR lines, regions) plus <code>detectFaces()</code> and <code>detectBarcodes()</code> for trying detectors on any canvas. Detector failures are logged with a <code>[redactit]</code> prefix.</p>
+    </section>
+
+    <!-- 11 -->
+    <section id="config">
+      <h2 class="h"><span class="num">11</span>Configuration</h2>
+      <p class="sub">Build-time variables and tuning constants.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Setting</th><th>Where</th><th>Default</th><th>Purpose</th></tr></thead>
+        <tbody>
+          <tr><td><code>VITE_BASE</code></td><td>env var</td><td><code>./</code></td><td>Public base path. The Pages workflow sets it to <code>/&lt;repo&gt;/</code>.</td></tr>
+          <tr><td><code>VITE_SITE_URL</code></td><td><code>.env</code></td><td>Pages URL</td><td>Absolute URL for canonical and Open Graph tags. Change it when you host your own copy.</td></tr>
+          <tr><td><code>PDF_SCALE</code></td><td><code>io/loader.js</code></td><td><code>2</code> (144 dpi)</td><td>PDF render resolution: sharper text versus memory use.</td></tr>
+          <tr><td><code>MAX_PDF_PAGES</code></td><td><code>io/loader.js</code></td><td><code>60</code></td><td>Page limit for PDFs.</td></tr>
+          <tr><td><code>MAX_SIDE</code></td><td><code>io/loader.js</code></td><td><code>9000</code> px</td><td>Larger images are scaled down.</td></tr>
+          <tr><td><code>minConfidence</code></td><td><code>detect/faces.js</code></td><td><code>0.55</code></td><td>Face detection threshold.</td></tr>
+          <tr><td>Word confidence filter</td><td><code>detect/ocr.js</code></td><td><code>45</code></td><td>Low-confidence OCR words are dropped unless they contain a digit or <code>@</code>.</td></tr>
+          <tr><td><code>cellSize()</code></td><td><code>render/effects.js</code></td><td>see code</td><td>Mosaic coarseness per region type. Unit-tested to stay coarse for text.</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <!-- 12 -->
+    <section id="deploy">
+      <h2 class="h"><span class="num">12</span>Deployment</h2>
+      <p class="sub">It's a folder of static files. Host it anywhere.</p>
+      <h3>GitHub Pages (built in)</h3>
+      <ol class="list">
+        <li>Fork the repository.</li>
+        <li>Go to <i>Settings → Pages</i> and set <i>Source</i> to <b>GitHub Actions</b>.</li>
+        <li>Set <code>VITE_SITE_URL</code> in <code>.env</code> to your Pages URL, and update <code>public/robots.txt</code> and <code>public/sitemap.xml</code>.</li>
+        <li>Push to <code>main</code>. <code>.github/workflows/pages.yml</code> builds and publishes automatically.</li>
+      </ol>
+      <h3>Any static host</h3>
+<pre><code><span class="p">$ </span>npm ci &amp;&amp; npm run build   <span class="c"># upload the dist/ folder</span></code></pre>
+      <p>For hosts that let you set HTTP headers (Netlify, Cloudflare Pages, nginx), consider adding the same CSP as a real header plus <code>frame-ancestors 'none'</code>, which can't be set from a <code>&lt;meta&gt;</code> tag. Serve <code>.wasm</code> as <code>application/wasm</code>.</p>
+      <h3>Desktop installers</h3>
+      <p><code>npm run desktop:pack</code> produces a DMG (macOS), an NSIS installer (Windows) or an AppImage (Linux) in <code>release/</code>, using <code>desktop/electron-builder.yml</code>.</p>
+    </section>
+
+    <hr />
+
+    <!-- 13 -->
+    <section id="troubleshooting">
+      <h2 class="h"><span class="num">13</span>Troubleshooting</h2>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Symptom</th><th>Cause &amp; fix</th></tr></thead>
+        <tbody>
+          <tr><td>"HEIC photos aren't supported"</td><td>Browsers can't decode HEIC. Convert to JPG, or set iPhone camera format to <i>Most Compatible</i>.</td></tr>
+          <tr><td>First scan is slow</td><td>About 15 MB of models load on first use and are reused afterwards. Face detection without GPU acceleration runs on the CPU. Enable hardware acceleration in your browser settings.</td></tr>
+          <tr><td>A step shows "unavailable"</td><td>That detector failed to load (often offline on a first visit, or WebGL blocked). The rest still works, and you can draw boxes by hand. Reload once online.</td></tr>
+          <tr><td>"Copy to clipboard" blocked</td><td>Some browsers restrict image clipboard writes. Use <i>Save</i> instead.</td></tr>
+          <tr><td>Something wasn't detected</td><td>Drag a box over it. If it's a common format, open an issue with a <b>fictional</b> example.</td></tr>
+          <tr><td>Harmless text got hidden</td><td>Click the box to reveal it, or switch the category off.</td></tr>
+          <tr><td>Exported PDF isn't searchable</td><td>Expected: pages are flattened so hidden text can't survive.</td></tr>
+          <tr><td><code>npm test</code> fails with "Cannot find module …/tests"</td><td>Old script on Node 22+. Pull the latest <code>main</code>, which uses <code>node --test tests/*.test.js</code>.</td></tr>
+          <tr><td>OCR / face assets 404 in dev</td><td>Run <code>npm install</code> (or <code>node scripts/copy-assets.mjs</code>) to vendor them into <code>public/vendor</code>.</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <!-- 14 -->
+    <section id="faq">
+      <h2 class="h"><span class="num">14</span>FAQ</h2>
+      <details class="faq"><summary>Does anything get uploaded?</summary><p>No. There's no backend. Open your browser's Network tab: after the page loads, dropping a file causes zero requests.</p></details>
+      <details class="faq"><summary>Is it free? Do I need an account?</summary><p>Free and open source under the MIT license. No account, no sign-up, no limits.</p></details>
+      <details class="faq"><summary>Why not just blur it in Preview or Paint?</summary><p>You'd have to spot every item yourself and get each box right, and the file's EXIF/GPS data would still be there. Many blur tools are also too fine to be safe for text. RedactIt does the spotting, the safe redaction and the scrubbing.</p></details>
+      <details class="faq"><summary>Does PNG export change my image?</summary><p>PNG is lossless outside the redacted areas. JPG is re-encoded at quality 93. Colour profiles are dropped as part of metadata removal.</p></details>
+      <details class="faq"><summary>Can I add my own patterns?</summary><p>Yes. It's one object in <code>patterns.js</code>; see <a href="#dev-rule">Adding a detection rule</a>. A UI for custom rules is on the roadmap.</p></details>
+      <details class="faq"><summary>Can I use it on sensitive work documents?</summary><p>Yes, that's what it's for, and nothing leaves your device. Still review the preview, and use Blackout for the highest assurance.</p></details>
+      <details class="faq"><summary>Does it work on phones?</summary><p>Yes, in modern mobile browsers. Large images and face detection are slower on phones.</p></details>
+    </section>
+
+    <!-- 15 -->
+    <section id="roadmap">
+      <h2 class="h"><span class="num">15</span>Roadmap</h2>
+      <div class="cards">
+        <div class="card"><h4>🧠 Name detection</h4><p>Optional on-device named-entity model for names and organisations.</p></div>
+        <div class="card"><h4>📂 Batch mode</h4><p>Drop a folder, get a folder back.</p></div>
+        <div class="card"><h4>🌍 More locales</h4><p>EU addresses and national IDs, IBAN validation, non-Latin OCR.</p></div>
+        <div class="card"><h4>🚗 More detectors</h4><p>License plates and signatures.</p></div>
+        <div class="card"><h4>📄 Selectable PDFs</h4><p>True content-stream redaction that keeps text searchable.</p></div>
+        <div class="card"><h4>🧩 Browser extension</h4><p>Right-click any image → RedactIt.</p></div>
+        <div class="card"><h4>📲 Installable PWA</h4><p>Web manifest ships already; offline service worker next.</p></div>
+        <div class="card"><h4>✍️ Custom rules</h4><p>Bring your own regex or keywords from the UI.</p></div>
+      </div>
+    </section>
+
+    <!-- 16 -->
+    <section id="contributing">
+      <h2 class="h"><span class="num">16</span>Contributing &amp; license</h2>
+      <p>Contributions are welcome: new detection rules, locale support, UI polish, and above all bug reports with <b>fictional</b> reproductions. Ground rules:</p>
+      <ul class="list">
+        <li><b>No network calls. Ever.</b> Bundle assets instead of loading them from a CDN.</li>
+        <li><b>Never keep original pixels or metadata in the output.</b> Exports must be re-encoded from a canvas.</li>
+        <li><b>Only fictional data</b> in tests and samples.</li>
+        <li>Run <code>npm test</code> and the end-to-end test before opening a pull request.</li>
+      </ul>
+      <div class="cards">
+        <a class="card" href="https://github.com/SYasJ/redactit" rel="noopener noreferrer"><h4>⭐ Source code</h4><p>github.com/SYasJ/redactit</p></a>
+        <a class="card" href="https://github.com/SYasJ/redactit/issues" rel="noopener noreferrer"><h4>🐞 Issues</h4><p>Bugs and feature requests</p></a>
+        <a class="card" href="https://github.com/SYasJ/redactit/blob/main/CONTRIBUTING.md" rel="noopener noreferrer"><h4>🤝 Contributing guide</h4><p>Setup and conventions</p></a>
+        <a class="card" href="https://github.com/SYasJ/redactit/security/advisories/new" rel="noopener noreferrer"><h4>🔐 Report a vulnerability</h4><p>Private disclosure</p></a>
+      </div>
+      <h3>Credits</h3>
+      <p>Built on <a href="https://github.com/naptha/tesseract.js" rel="noopener noreferrer">Tesseract.js</a>, <a href="https://github.com/vladmandic/face-api" rel="noopener noreferrer">@vladmandic/face-api</a> + TensorFlow.js, <a href="https://github.com/zxing-js/library" rel="noopener noreferrer">ZXing</a>, <a href="https://github.com/mozilla/pdf.js" rel="noopener noreferrer">PDF.js</a>, <a href="https://github.com/Hopding/pdf-lib" rel="noopener noreferrer">pdf-lib</a>, <a href="https://github.com/MikeKovarik/exifr" rel="noopener noreferrer">exifr</a> and <a href="https://vitejs.dev/" rel="noopener noreferrer">Vite</a>.</p>
+      <h3>License</h3>
+      <p>MIT © RedactIt contributors.</p>
+    </section>
+
+  </article>
+  </main>
+</div>
+
+<footer>
+  <span>RedactIt Wiki · MIT licensed · <a href="https://github.com/SYasJ/redactit" rel="noopener noreferrer">GitHub</a></span>
+  <span><a href="../">Open the app</a> · <a href="#overview">Back to top ↑</a></span>
+</footer>
+
+</body>
+</html>
