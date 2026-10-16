@@ -13,9 +13,12 @@
 Cards, emails, phones, addresses, faces, barcodes — gone. Hidden metadata — gone. Nothing ever leaves your device.
 
 [![CI](https://github.com/SYasJ/hushshot/actions/workflows/ci.yml/badge.svg)](https://github.com/SYasJ/hushshot/actions/workflows/ci.yml)
+[![RepoGrade](https://www.repo-grade.com/api/badge/syasj/hushshot)](https://www.repo-grade.com/report/syasj/hushshot)
+[![Coverage](https://codecov.io/gh/SYasJ/hushshot/branch/main/graph/badge.svg)](https://codecov.io/gh/SYasJ/hushshot)
 [![License: MIT](https://img.shields.io/badge/license-MIT-8b5cf6.svg)](LICENSE)
 ![Runs offline](https://img.shields.io/badge/network-none-34d399)
 ![No uploads](https://img.shields.io/badge/uploads-0-22d3ee)
+[![Last commit](https://img.shields.io/github/last-commit/SYasJ/hushshot)](https://github.com/SYasJ/hushshot/commits/main)
 
 <img src="docs/before-after.png" alt="Before and after: a fictional pay stub with the SSN, address, email, phone, card, account numbers, face, QR code and barcode blurred" width="100%" />
 

@@ -11,3 +11,7 @@ e2e/out/
 .env.*.local
 preview.log
 e2e.log
+
+# coverage output
+lcov.info
+coverage/

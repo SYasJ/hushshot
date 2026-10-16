@@ -7,9 +7,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-        with: { node-version: 20, cache: npm }
+        with: { node-version: 22, cache: npm }
       - run: npm ci
-      - run: npm test
+      - name: Tests with coverage
+        run: npm run coverage
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          files: lcov.info
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: false
       - run: npm run build
       - name: End-to-end (headless Chromium)
         run: |

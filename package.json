@@ -11,6 +11,7 @@
     "build": "node scripts/copy-assets.mjs && vite build",
     "preview": "vite preview --host 0.0.0.0",
     "test": "node --test tests/*.test.js",
+    "coverage": "node --test --experimental-test-coverage --test-coverage-exclude=tests/** --test-reporter=spec --test-reporter-destination=stdout --test-reporter=lcov --test-reporter-destination=lcov.info tests/*.test.js",
     "e2e": "node e2e/smoke.mjs",
     "samples": "node scripts/make-samples.mjs",
     "desktop": "npm run build && npx electron desktop/main.cjs",
